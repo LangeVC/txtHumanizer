@@ -25,4 +25,6 @@ tags:
 frameworks:
   - opencode
   - claude-code
+  - codex
+  - antigravity
 entrypoint: SKILL.md
