@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Capacium/capacium-action-validate@v1
+        with:
+          manifest-path: capability.yaml
+          strict-mode: 'true'
+          sync-version: 'true'
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Capacium/capacium-action-publish@v1
