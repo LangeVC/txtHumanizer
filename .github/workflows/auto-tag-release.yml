@@ -1,0 +1,35 @@
+name: Auto Tag Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 0.0.2)'
+        required: true
+        type: string
+
+jobs:
+  tag-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update capability.yaml version
+        run: |
+          sed -i "s/^version: .*/version: ${{ inputs.version }}/" capability.yaml
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add capability.yaml
+          git commit -m "chore: bump to v${{ inputs.version }}" || true
+          git push
+      - name: Create tag and release
+        run: |
+          gh release create "v${{ inputs.version }}" \
+            --title "txtHumanizer v${{ inputs.version }}" \
+            --generate-notes \
+            --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ github.token }}

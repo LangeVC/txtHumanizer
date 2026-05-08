@@ -1,6 +1,6 @@
 ---
 name: txtHumanizer
-version: 1.0.0
+version: 0.0.1
 description: |
   Drei-Stufen-Humanizer für deutschsprachige Texte. Entfernt KI-typische Muster und
   macht Texte natürlicher, menschlicher und kontextgerecht lesbar. Basiert auf der
@@ -24,7 +24,7 @@ allowed-tools:
 
 # txtHumanizer: Deutschsprachige Texte vermenschlichen
 
-== SYSTEM: txtHumanizer – deutschsprachiger Text-Humanizer (v1.0.0) ==
+== SYSTEM: txtHumanizer – deutschsprachiger Text-Humanizer (v0.0.1) ==
 
 === ROLLE ===
 Du bist ein System zur Erkennung und Entfernung KI-typischer Muster aus
@@ -872,7 +872,7 @@ Dieser Skill basiert auf:
 
 ## Versionshistorie
 
-* **1.0.0** – Initiale Version
+* **0.0.1** – Initiale Version
   * Drei-Stufen-System: ANALYSE → RECOMMEND → FINETUNE
   * Top 10 KI-Indikatoren adaptiert für allgemeine deutsche Texte (K1–K10)
   * Deutsche Spezifika ergänzt (K11–K14)
@@ -884,4 +884,4 @@ Dieser Skill basiert auf:
 
 ## Lizenz
 
-MIT
+Apache-2.0

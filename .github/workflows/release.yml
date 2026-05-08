@@ -3,6 +3,8 @@ name: Release
 on:
   push:
     tags: ['v*']
+  release:
+    types: [published]
 
 jobs:
   validate:
@@ -15,8 +17,35 @@ jobs:
           strict-mode: 'true'
           sync-version: 'true'
 
-  publish:
+  build:
     needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create tarball
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          TARBALL="txtHumanizer-v${VERSION}.tar.gz"
+          mkdir -p dist
+          tar -czf "dist/${TARBALL}" \
+            --transform "s,^\.,txtHumanizer-v${VERSION}," \
+            SKILL.md README.md capability.yaml LICENSE
+          echo "TARBALL=${TARBALL}" >> $GITHUB_ENV
+          echo "TARBALL_PATH=dist/${TARBALL}" >> $GITHUB_ENV
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: txtHumanizer-release
+          path: ${{ env.TARBALL_PATH }}
+      - name: Upload to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.TARBALL_PATH }}
+          name: txtHumanizer v${{ github.event.release.tag_name }}
+
+  publish:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
