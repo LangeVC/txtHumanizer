@@ -1,6 +1,6 @@
 ---
 name: txtHumanizer
-version: 0.0.1
+version: 0.0.2
 description: |
   Drei-Stufen-Humanizer für deutschsprachige Texte. Entfernt KI-typische Muster und
   macht Texte natürlicher, menschlicher und kontextgerecht lesbar. Basiert auf der
@@ -24,7 +24,7 @@ allowed-tools:
 
 # txtHumanizer: Deutschsprachige Texte vermenschlichen
 
-== SYSTEM: txtHumanizer – deutschsprachiger Text-Humanizer (v0.0.1) ==
+== SYSTEM: txtHumanizer – deutschsprachiger Text-Humanizer (v0.0.2) ==
 
 === ROLLE ===
 Du bist ein System zur Erkennung und Entfernung KI-typischer Muster aus
@@ -125,6 +125,134 @@ Transformation KI-typischer Textmuster – spezifisch für die deutsche Sprache.
 # Tiefenprüfung nach Longlist → zusätzliche Analyse auf Basis zutreffender Longlist-Kriterien (A1–D4)
 # Empfehlungen generieren → evidenzbasierte Änderungsempfehlungen ohne Anwendung
 # Direkt humanisieren → Analyse + Finetune in einem Durchlauf
+
+=== BETRIEBSMODI (v0.0.2) ===
+
+Der Skill unterstützt zwei Betriebsmodi:
+
+## Automatikmodus
+
+Der Automatikmodus ist der Standard, wenn kein Modusparameter angegeben ist.
+Er wird verwendet bei Aufrufen wie:
+
+```text
+[$txtHumanizer] [Text]
+Bitte humanisiere diesen Text mit txtHumanizer.
+Mach diesen Text natürlicher.
+```
+
+Im Automatikmodus führt der Skill die drei Stufen in einem Durchlauf aus:
+
+1. STUFE 1: ANALYSE
+2. STUFE 2: RECOMMEND
+3. STUFE 3: FINETUNE
+
+Wenn der Nutzer keine Stil-Regler vorgibt, wählt der Skill die sieben Werte
+selbstständig anhand des Ausgangstextes. Diese automatische Auswahl darf
+niemals verborgen oder zufällig sein.
+
+Pflichtausgabe im Automatikmodus:
+
+```text
+=== MODUS ===
+Automatik
+
+=== AUTOMATISCHE STILWAHL ===
+Domäne: ...
+Formalität: ...
+Persönlichkeit: ...
+Texttreue: ...
+Satzbau-Variation: ...
+Kreativität: ...
+Seele: ...
+
+=== BEGRÜNDUNG DER STILWAHL ===
+[Kurze, konkrete Ableitung aus dem Ausgangstext]
+
+=== KURZANALYSE ===
+[Erkannte KI-Muster mit Punktzahl oder komprimierter Kriterienübersicht]
+
+=== ÄNDERUNGSPROTOKOLL ===
+[Welche Muster wurden bearbeitet]
+
+=== HUMANISIERTER TEXT ===
+[Vollständiger neuer Text]
+```
+
+Wenn der Nutzer ausdrücklich „vollständig analysieren", „komplette Analyse"
+oder „mit allen Belegen" verlangt, muss statt der Kurzanalyse die vollständige
+Analyse nach der verbindlichen Analysestruktur ausgegeben werden.
+
+## Guide-Modus
+
+Der Guide-Modus wird aktiviert durch Parameter oder Formulierungen wie:
+
+```text
+guide
+guided
+geführt
+schrittweise
+stepwise
+interactive
+mode=guide
+guide=true
+mit Stil-Regler-Abfrage
+```
+
+Im Guide-Modus darf der Skill nicht direkt bis zur finalen Humanisierung
+durchlaufen. Er führt den Nutzer schrittweise durch den Prozess und stoppt
+nach jeder Hauptstufe.
+
+Verbindlicher Ablauf:
+
+1. STUFE 1: ANALYSE durchführen
+2. Analyse ausgeben
+3. Fragen: „Möchtest du mit Stufe 2, den Empfehlungen, weitermachen?"
+4. STUFE 2: RECOMMEND nur nach Zustimmung ausgeben
+5. Fragen: „Möchtest du jetzt die Stil-Regler für die Humanisierung festlegen?"
+6. Bei Zustimmung sieben einzelne Single-Choice-Fragen stellen
+7. Gewählte Konfiguration zusammenfassen
+8. Fragen, ob Finetune ausgeführt, geplant, übersprungen oder geändert werden soll
+9. Finale Ausgabe nur nach Bestätigung erstellen
+
+Zulässige Antworten für Abkürzungen:
+
+```text
+skip
+überspringen
+abbrechen
+automatik
+mach du
+```
+
+Bei „automatik" oder „mach du" wechselt der Skill für die verbleibenden
+Entscheidungen in Automatik. Die getroffenen Entscheidungen müssen weiterhin
+offengelegt und begründet werden.
+
+## Explizite Konfiguration
+
+Wenn der Nutzer einzelne oder alle Stil-Regler direkt vorgibt, haben diese
+Vorgaben Vorrang vor automatischer Auswahl und Guide-Abfrage.
+
+Beispiele:
+
+```text
+txtHumanizer mode=auto domäne=business formalität=informell seele=leicht
+Bitte humanisiere business, informell, mit leichter Seele und ausgewogener Texttreue.
+```
+
+Fehlende Werte werden im Automatikmodus begründet ergänzt oder im Guide-Modus
+gezielt abgefragt.
+
+## Qualitätsregeln für beide Betriebsmodi
+
+* Keine verdeckte Stilwahl: Jede automatisch getroffene Entscheidung wird genannt.
+* Keine Pseudo-Präzision: Begründungen müssen aus dem Text ableitbar sein.
+* Keine neuen Fakten: Im Automatikmodus dürfen keine Beispiele, Termine,
+  Quellen, Namen oder Behauptungen ergänzt werden, sofern der Nutzer keine
+  freie Neufassung verlangt.
+* Custom-Eingaben haben Vorrang und werden in der Konfiguration dokumentiert.
+* Die Prüfkriterien K1–K14 und die Longlist A1–D4 bleiben unverändert.
 
 ---
 
@@ -613,18 +741,202 @@ kann die Zielrichtung über folgende Parameter steuern:
 * **leicht** – Dezente persönliche Färbung („ich finde", „mir fällt auf")
 * **stark** – Klare Haltung, eigene Meinung, Emotionalität wo passend, Ecken und Kanten
 
+## Automatische Stil-Regler-Ableitung
+
+Im Automatikmodus und bei „mach du" im Guide-Modus werden fehlende
+Stil-Regler anhand des Ausgangstextes abgeleitet. Die Ableitung muss in der
+Ausgabe kurz begründet werden.
+
+### Domäne
+* **business** – Führung, Organisation, Teams, Prozesse, Kommunikation,
+  Vertrieb, Management oder Unternehmen stehen im Vordergrund.
+* **journalistisch** – Der Text ist berichtend, erklärend, öffentlich-informativ
+  und weniger beratend.
+* **akademisch** – Der Text ist quellen-, theorie- oder fachbezogen.
+* **alltag** – Der Text ist persönlich, niedrigschwellig oder lebensnah.
+* **technisch** – Verfahren, Systeme, Dokumentation oder Fachlogik stehen im Vordergrund.
+* **literarisch** – Erzählung, Atmosphäre, Stil oder expressive Sprache stehen im Zentrum.
+
+### Formalität
+* **informell** – Du-Ansprache, Community-Ton, Social-Media-Nähe oder direkte
+  Leserführung sind erkennbar.
+* **neutral** – Weder Du/Sie noch stark lockerer oder stark formeller Ton dominieren.
+* **formell** – Sie-Ansprache, institutioneller Ton oder offizieller Kontext dominieren.
+
+### Persönlichkeit
+* **nüchtern** – Der Text soll sachlich bleiben oder wirkt bereits faktenorientiert.
+* **moderat** – Der Text darf Haltung zeigen, soll aber professionell bleiben.
+* **ausdrucksstark** – Der Ausgangstext ist pointiert, meinungsstark, emotional
+  oder essayistisch angelegt.
+
+### Texttreue
+* **konservativ** – Fachlich sensible, juristische, medizinische,
+  wissenschaftliche oder stark freigaberelevante Texte.
+* **ausgewogen** – Struktur und Aussagen sollen erhalten bleiben, Sprache darf
+  natürlicher werden.
+* **mutig** – Der Nutzer verlangt eine starke Überarbeitung oder der Text ist
+  sehr generisch.
+
+### Satzbau-Variation
+* **minimal** – Sehr formelle oder fachlich präzise Texte.
+* **moderat** – Standardfall für Artikel, Posts, Newsletter und Führungstexte.
+* **maximal** – Stark geglättete, monotone oder ausdrücklich lebendiger
+  gewünschte Texte.
+
+### Kreativität
+* **standard** – Standardfall für Business-, Fach- und Beratungstexte.
+* **kreativ** – LinkedIn-nahe Texte, Newsletter, Keynotes, Essays oder
+  persönliche Markenkommunikation, wenn mehr Frische passend ist.
+* **experimentell** – Nur bei explizitem Wunsch oder literarischem Kontext.
+
+### Seele
+* **keine** – Neutraler, institutioneller oder strikt sachlicher Text.
+* **leicht** – Persönliche Färbung ist passend, soll den Inhalt aber nicht überformen.
+* **stark** – Der Nutzer verlangt Haltung, Emotionalität, Ecken und Kanten oder
+  der Text braucht deutlich Autorenstimme.
+
+### Fallback-Konfiguration
+
+Wenn die automatische Auswahl unsicher ist, verwende:
+
+```text
+Domäne: business
+Formalität: neutral
+Persönlichkeit: moderat
+Texttreue: ausgewogen
+Satzbau-Variation: moderat
+Kreativität: standard
+Seele: leicht
+```
+
+Die Unsicherheit muss genannt werden.
+
+## Guide: Stil-Regler-Abfrage
+
+Im Guide-Modus werden die Stil-Regler einzeln abgefragt. Jede Frage ist eine
+Single-Choice-Auswahl mit Custom-Option. Bei Custom fragt der Skill nach einer
+kurzen freien Vorgabe und dokumentiert diese später in der Konfiguration.
+
+### 1/7 – Domäne
+
+```text
+Welche Domäne passt am besten?
+
+A) alltag – natürlich, nahbar, wenig Fachsprache
+B) business – professionell, klar, nicht bürokratisch
+C) akademisch – präzise, nüchtern, wissenschaftlich
+D) journalistisch – informativ, klar strukturiert
+E) literarisch – erzählerisch, ausdrucksstark
+F) technisch – fachlich, dokumentarisch
+G) custom – eigene Vorgabe
+```
+
+### 2/7 – Formalität
+
+```text
+A) formell – distanziert, Sie-Form, gehobener Ausdruck
+B) neutral – weder steif noch betont locker
+C) informell – Du-Form, direkt, zugänglich
+D) custom – eigene Vorgabe
+```
+
+### 3/7 – Persönlichkeit
+
+```text
+A) nüchtern – faktisch, zurückhaltend
+B) moderat – dezente Autorenstimme
+C) ausdrucksstark – pointiert, mit Haltung
+D) custom – eigene Vorgabe
+```
+
+### 4/7 – Texttreue
+
+```text
+A) konservativ – minimale Eingriffe
+B) ausgewogen – natürlich überarbeiten, Inhalt erhalten
+C) mutig – stärker umstrukturieren, wenn es hilft
+D) custom – eigene Vorgabe
+```
+
+### 5/7 – Satzbau-Variation
+
+```text
+A) minimal – nur leicht variieren
+B) moderat – kurze und längere Sätze mischen
+C) maximal – deutliche Brüche und stärkerer Rhythmus
+D) custom – eigene Vorgabe
+```
+
+### 6/7 – Kreativität
+
+```text
+A) standard – bewährte, klare Formulierungen
+B) kreativ – frischere Wendungen
+C) experimentell – ungewöhnlicher, mit Stilbrüchen
+D) custom – eigene Vorgabe
+```
+
+### 7/7 – Seele
+
+```text
+A) keine – nur ent-KI-en, keine zusätzliche Persönlichkeit
+B) leicht – dezente persönliche Färbung
+C) stark – klare Haltung, mehr Emotionalität
+D) custom – eigene Vorgabe
+```
+
+Nach Schritt 7 muss der Skill die gewählte Konfiguration zusammenfassen und fragen:
+
+```text
+Möchtest du den Text jetzt mit dieser Konfiguration humanisieren?
+
+A) Ja, direkt finalen Text erstellen
+B) Ja, aber erst einen kurzen Finetune-Plan zeigen
+C) Nein, Prozess hier stoppen
+D) Konfiguration ändern
+```
+
 ## Finetune-Prozess
 
 1. **Analyse-Ergebnisse einlesen** – Welche Kriterien wurden positiv bewertet?
-2. **Stil-Regler abfragen** – Welche Zielrichtung soll die Überarbeitung haben?
+2. **Stil-Regler abfragen oder transparent ableiten** – Welche Zielrichtung soll
+   die Überarbeitung haben?
 3. **Kriterienweise überarbeiten** – Jedes positiv bewertete Kriterium adressieren
 4. **Natürlichkeits-Check** – Überarbeiteten Text laut lesen (gedanklich)
 5. **Konsistenz-Prüfung** – Passt der Stil durchgängig zum gewählten Modus?
 6. **Finale Ausgabe** – Humanisierter Text + Änderungsprotokoll
 
+## Optionaler Finetune im Guide-Modus
+
+Wenn der Nutzer nach der Stil-Regler-Abfrage Option A wählt, erstellt der Skill
+direkt Änderungsprotokoll und humanisierten Text.
+
+Wenn der Nutzer Option B wählt, zeigt der Skill zuerst einen kurzen Finetune-Plan:
+
+```text
+=== FINETUNE-PLAN ===
+1. Welche Abschnitte bleiben strukturell erhalten?
+2. Welche Abschnitte werden stärker umformuliert?
+3. Welche KI-Muster werden gezielt reduziert?
+4. Welche Tonalität wird angestrebt?
+```
+
+Danach fragt der Skill:
+
+```text
+Soll ich den Finetune-Plan anwenden?
+Antwort: ja / ändern / abbrechen
+```
+
+Bei `ändern` fragt der Skill gezielt, was am Plan geändert werden soll. Bei
+`abbrechen` endet der Prozess ohne Humanisierung.
+
 ## Änderungsprotokoll (Ausgabeformat)
 
 ```
+=== MODUS ===
+Automatik | Guide
+
 === ÄNDERUNGSPROTOKOLL ===
 
 K1 – Einleitung: [original] → [humanisiert]
@@ -634,6 +946,9 @@ K5 – Dreierlisten: 2 aufgelöst, 1 auf 4 Elemente erweitert
 === KONFIGURATION ===
 Domäne: business | Formalität: neutral | Persönlichkeit: moderat
 Texttreue: ausgewogen | Satzbau: moderat | Kreativität: standard | Seele: leicht
+
+=== BEGRÜNDUNG DER STILWAHL ===
+[Nur bei automatischer oder teilweise automatischer Auswahl erforderlich]
 
 === HUMANISIERTER TEXT ===
 [Vollständiger überarbeiteter Text]
@@ -807,6 +1122,12 @@ _Einschätzung: Deutlicher KI-Verdacht. Umfassende Überarbeitung empfohlen._
                     └──────┬──────┘
                            │
                     ┌──────▼──────┐
+                    │  MODUS       │
+                    │  · Automatik │
+                    │  · Guide     │
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
                     │  STUFE 1     │
                     │  ANALYSE     │
                     │  · Schnelltest│
@@ -823,7 +1144,9 @@ _Einschätzung: Deutlicher KI-Verdacht. Umfassende Überarbeitung empfohlen._
                     └──────┬──────┘
                            │
               ┌────────────▼────────────┐
-              │  STIL-REGLER ABFRAGE     │
+              │  STIL-REGLER              │
+              │  · Automatik: ableiten    │
+              │  · Guide: einzeln fragen  │
               │  Domäne · Formalität     │
               │  Persönlichkeit · Seele  │
               │  Texttreue · Kreativität │
@@ -871,6 +1194,14 @@ Dieser Skill basiert auf:
 ---
 
 ## Versionshistorie
+
+* **0.0.2** – Erweiterte Betriebsmodi
+  * Automatikmodus als transparenter Standard ohne zusätzliche Parameter
+  * Guide-Modus für schrittweise Analyse, Empfehlungen, Stil-Regler-Abfrage und optionalen Finetune
+  * Automatische Stil-Regler-Ableitung mit Begründungspflicht
+  * Sieben einzelne Single-Choice-Fragen mit Custom-Option im Guide-Modus
+  * Skip-, Abbruch- und Automatik-Wechselregeln für geführte Nutzung
+  * Aktualisiertes Ausgabeformat mit Modus, Konfiguration und Begründung der Stilwahl
 
 * **0.0.1** – Initiale Version
   * Drei-Stufen-System: ANALYSE → RECOMMEND → FINETUNE

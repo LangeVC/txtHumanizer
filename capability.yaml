@@ -1,10 +1,12 @@
 name: txtHumanizer
-version: 0.0.1
+version: 0.0.2
 kind: skill
 description: >
   Drei-Stufen-Humanizer für deutschsprachige Texte. Erkennt und entfernt
   KI-typische Muster auf Basis der Wikipedia KI-Erkennung v1.35.
   Stufen: ANALYSE → RECOMMEND → FINETUNE mit 7 konfigurierbaren Stil-Reglern.
+  v0.0.2 ergänzt einen transparenten Automatikmodus und einen geführten
+  Guide-Modus mit schrittweiser Stil-Regler-Abfrage.
 author: LangeVC
 license: Apache-2.0
 homepage: https://github.com/LangeVC/txtHumanizer

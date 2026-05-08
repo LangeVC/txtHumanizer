@@ -1,0 +1,93 @@
+{
+  "projectName": "txtHumanizer v0.0.2 Extended Modes",
+  "version": "0.0.2",
+  "status": "draft",
+  "sequence_type": "build",
+  "execution_recommendation": {
+    "mode": "standard",
+    "suggested_workflow": "ralph-loop-attended",
+    "reason": "Repository instruction update with metadata, README, and verification gates.",
+    "estimated_iterations": 4,
+    "parallel_opportunities": 1
+  },
+  "tasks": [
+    {
+      "id": "DOC-001",
+      "title": "Add mode requirements to SKILL.md",
+      "description": "Extend SKILL.md with Automatikmodus, Guide-Modus, mode detection, style inference, guided style-regler selection, optional Finetune, and v0.0.2 changelog.",
+      "acceptanceCriteria": [
+        "SKILL.md declares version 0.0.2",
+        "SKILL.md defines Automatikmodus as the default when no guide parameter is present",
+        "SKILL.md defines Guide-Modus aliases and checkpoint behavior",
+        "SKILL.md documents deterministic inference rules for all seven style-reglers",
+        "SKILL.md documents seven single-choice style-regler steps with custom options",
+        "SKILL.md includes v0.0.2 in Versionshistorie"
+      ],
+      "priority": "high",
+      "estimatedEffort": "2",
+      "dependsOn": [],
+      "type": "documentation",
+      "required_capabilities": ["planning", "documentation"],
+      "write_scope": ["SKILL.md"],
+      "verification": ["grep for Automatikmodus, Guide-Modus, v0.0.2, and style-regler sections"],
+      "passes": false
+    },
+    {
+      "id": "DOC-002",
+      "title": "Update README usage documentation",
+      "description": "Document Automatikmodus and Guide-Modus in README with concise examples.",
+      "acceptanceCriteria": [
+        "README.md version badge references 0.0.2",
+        "README.md describes Automatikmodus",
+        "README.md describes Guide-Modus",
+        "README.md includes examples for both modes"
+      ],
+      "priority": "medium",
+      "estimatedEffort": "1",
+      "dependsOn": ["DOC-001"],
+      "type": "documentation",
+      "required_capabilities": ["documentation"],
+      "write_scope": ["README.md"],
+      "verification": ["grep README.md for mode documentation and version badge"],
+      "passes": false
+    },
+    {
+      "id": "META-001",
+      "title": "Update package metadata",
+      "description": "Update capability.yaml version and description to reflect v0.0.2 extended modes.",
+      "acceptanceCriteria": [
+        "capability.yaml version is 0.0.2",
+        "capability.yaml description mentions Automatikmodus and Guide-Modus",
+        "capability.yaml remains parseable YAML"
+      ],
+      "priority": "medium",
+      "estimatedEffort": "1",
+      "dependsOn": [],
+      "type": "metadata",
+      "required_capabilities": ["documentation"],
+      "write_scope": ["capability.yaml"],
+      "verification": ["parse capability.yaml as YAML"],
+      "passes": false
+    },
+    {
+      "id": "VERIFY-001",
+      "title": "Verify v0.0.2 implementation",
+      "description": "Run text and metadata checks for the updated skill package.",
+      "acceptanceCriteria": [
+        "Required mode sections exist",
+        "Required aliases exist",
+        "Version metadata is consistent",
+        "YAML metadata parses",
+        "Unrelated untracked files remain untouched"
+      ],
+      "priority": "high",
+      "estimatedEffort": "1",
+      "dependsOn": ["DOC-001", "DOC-002", "META-001"],
+      "type": "verification",
+      "required_capabilities": ["testing", "review"],
+      "write_scope": [],
+      "verification": ["grep checks", "YAML parse", "git diff review"],
+      "passes": false
+    }
+  ]
+}

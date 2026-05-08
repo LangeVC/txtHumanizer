@@ -1,2 +1,7 @@
-.skillweave/
+.skillweave/*
+!.skillweave/prd-txthumanizer-v0.0.2.md
+!.skillweave/prd-txthumanizer-v0.0.2.json
+!.skillweave/sequences/
+.skillweave/sequences/*
+!.skillweave/sequences/txthumanizer-v0.0.2-execution-sequence.md
 .DS_Store
