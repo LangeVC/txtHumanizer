@@ -28,6 +28,9 @@ frameworks:
   - opencode
   - claude-code
   - claude-desktop
-  - codex
   - antigravity
+  - qwen
+  - gemini-cli
+  - cursor
+  - codex
 entrypoint: SKILL.md
