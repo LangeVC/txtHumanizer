@@ -11,6 +11,9 @@
 Drei-Stufen-Humanizer für deutschsprachige Texte. Erkennt und entfernt KI-typische
 Muster auf Basis der **Wikipedia KI-Erkennung – Systemkonfiguration v1.35**.
 
+> **Repository provenance.** The canonical home of this repository is Forgejo at
+> `git.langevc.com/langevc/txt-humanizer`. The GitHub repository is a mirror.
+
 ```
 ANALYSE → RECOMMEND → FINETUNE
 ```
