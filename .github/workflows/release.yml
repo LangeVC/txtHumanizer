@@ -3,11 +3,11 @@ name: Release
 on:
   push:
     tags: ['v*']
-  release:
-    types: [published]
 
 jobs:
   validate:
+    # GitHub-only: never runs on the Forgejo mirror side.
+    if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,6 +19,7 @@ jobs:
 
   build:
     needs: validate
+    if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,14 +39,18 @@ jobs:
           name: txtHumanizer-release
           path: ${{ env.TARBALL_PATH }}
       - name: Upload to GitHub Release
-        if: github.event_name == 'release'
+        # Create the GitHub release from the mirrored tag and attach the tarball.
+        # Tags originate on Forgejo (canonical); this never creates tags or commits.
+        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ env.TARBALL_PATH }}
-          name: txtHumanizer v${{ github.event.release.tag_name }}
+          name: txtHumanizer ${{ github.ref_name }}
+          generate_release_notes: true
 
   publish:
     needs: build
+    if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

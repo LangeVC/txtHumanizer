@@ -1,35 +1,23 @@
-name: Auto Tag Release
+name: Auto Tag Release (DISABLED)
+
+# DISABLED 2026-07-28 (LVC-MIR-G0). Forgejo (git.langevc.com) is canonical; GitHub is
+# a read-only mirror. This workflow previously bumped capability.yaml, committed and
+# pushed the change, and created a tag + release ON GITHUB — a writeback into the
+# mirror that is no longer allowed. Tags, version bumps and releases now originate
+# ONLY on Forgejo. Create the tag on Forgejo; the mirror pushes it to GitHub where
+# release.yml builds the release artifacts.
+#
+# Kept as a tombstone (no push/tag trigger; the single job is hard-disabled with
+# 'if: false') so the history and intent are visible.
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (e.g. 0.0.2)'
-        required: true
-        type: string
 
 jobs:
-  tag-and-release:
+  disabled:
+    if: false
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Update capability.yaml version
-        run: |
-          sed -i "s/^version: .*/version: ${{ inputs.version }}/" capability.yaml
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add capability.yaml
-          git commit -m "chore: bump to v${{ inputs.version }}" || true
-          git push
-      - name: Create tag and release
-        run: |
-          gh release create "v${{ inputs.version }}" \
-            --title "txtHumanizer v${{ inputs.version }}" \
-            --generate-notes \
-            --repo ${{ github.repository }}
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - run: |
+          echo "This workflow is intentionally disabled. Create tags/releases on Forgejo."
+          exit 1
