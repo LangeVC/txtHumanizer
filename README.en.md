@@ -6,8 +6,8 @@
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
 
-[ ![Deutsch](https://img.shields.io/badge/🇩🇪-Deutsch-0969da?style=flat-square) ](README.md)
-[ ![English](https://img.shields.io/badge/🇬🇧-English-238636?style=flat-square) ](README.en.md)
+[ ![English](https://img.shields.io/badge/🇬🇧-English-238636?style=flat-square) ](README.md)
+[ ![Deutsch](https://img.shields.io/badge/🇩🇪-Deutsch-0969da?style=flat-square) ](README.de.md)
 [ ![Français](https://img.shields.io/badge/🇫🇷-Français-0969da?style=flat-square) ](README.fr.md)
 [ ![Español](https://img.shields.io/badge/🇪🇸-Español-0969da?style=flat-square) ](README.es.md)
 [ ![Italiano](https://img.shields.io/badge/🇮🇹-Italiano-0969da?style=flat-square) ](README.it.md)
