@@ -1,0 +1,13 @@
+variety: "fr-CA"
+name: "Français québécois / canadien"
+shield_type: "lexical_inconsistency_shield"
+description: "Termes québécois légitimes protégés contre les faux positifs."
+protected_terms:
+  - "magasiner"
+  - "courriel"
+  - "fin de semaine"
+  - "char"
+  - "divan"
+  - "chicane"
+  - "stationnement"
+  - "breuvage"

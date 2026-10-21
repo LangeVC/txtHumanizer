@@ -1,0 +1,48 @@
+# txt-humanizer Criteria Catalog: Spanish (es)
+# Schema: catalog-criteria-v1
+
+language: "es"
+name: "Español"
+
+criteria:
+  - id: "ES-BOT-LEAK"
+    name: "Filtración de diálogo chatbot"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Saludos o disculpas características de chatbots copiadas accidentalmente."
+    triggers:
+      - "¡Por supuesto!"
+      - "Como modelo de lenguaje"
+      - "Espero que esto te sirva de ayuda"
+      - "Aquí tienes un resumen de"
+      - "No dudes en preguntar si necesitas más información"
+
+  - id: "ES-CLICHE-DISCOURS"
+    name: "Clichés retóricos y solemnidad vacía"
+    tier: 2
+    weight: 0.6
+    category: "rhetorical_cliche"
+    description: "Fórmulas de relleno repetidas sistemáticamente por LLMs en español."
+    triggers:
+      - "Es fundamental destacar que"
+      - "Es crucial resaltar que"
+      - "Cabe mencionar que"
+      - "Juega un papel crucial en"
+      - "Juega un papel fundamental"
+      - "En resumen"
+      - "En conclusión"
+      - "En términos de"
+      - "A lo largo de la historia"
+      - "Sin lugar a dudas"
+
+  - id: "ES-SYMMETRY"
+    name: "Balance estructural artificial"
+    tier: 2
+    weight: 0.5
+    category: "structural_symmetry"
+    description: "Conectores forzados de contraste constante."
+    triggers:
+      - "Por un lado, por otro lado"
+      - "No solo, sino también"
+      - "Tanto en el ámbito como en"

@@ -1,0 +1,12 @@
+variety: "pt-PT"
+name: "Português europeu"
+shield_type: "lexical_inconsistency_shield"
+description: "Vocabulário europeu legítimo protegido contra falsos positivos."
+protected_terms:
+  - "telemóvel"
+  - "autocarro"
+  - "comboio"
+  - "equipa"
+  - "desporto"
+  - "ecrã"
+  - "computador"

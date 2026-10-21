@@ -1,0 +1,14 @@
+language: "it"
+transforms:
+  - trigger: "È fondamentale sottolineare che"
+    replacements:
+      - "Va sottolineato che"
+      - "Si noti che"
+      - ""
+    strategy: "delete_or_shorten"
+
+  - trigger: "Gioca un ruolo cruciale in"
+    replacements:
+      - "Influisce su"
+      - "Determina"
+    strategy: "action_verb"

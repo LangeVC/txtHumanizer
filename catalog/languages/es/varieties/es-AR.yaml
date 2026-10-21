@@ -1,0 +1,13 @@
+variety: "es-AR"
+name: "Español rioplatense / argentino"
+shield_type: "lexical_inconsistency_shield"
+description: "Vocabulario y morfología rioplatense (voseo) protegidos contra falsos positivos."
+protected_terms:
+  - "pileta"
+  - "remera"
+  - "laburo"
+  - "colectivo"
+  - "auto"
+  - "frutilla"
+  - "departamento"
+  - "celular"

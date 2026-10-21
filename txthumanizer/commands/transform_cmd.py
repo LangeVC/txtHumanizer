@@ -34,12 +34,17 @@ def parse_transforms_simple(path: str) -> dict:
 
 
 def apply_transforms(text: str, lang: str = None) -> tuple:
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    supported_langs = [
+        d for d in os.listdir(os.path.join(base_dir, "catalog", "languages"))
+        if os.path.isdir(os.path.join(base_dir, "catalog", "languages", d))
+    ] if os.path.exists(os.path.join(base_dir, "catalog", "languages")) else ["de", "en"]
+
     det = detect_language(text)
-    detected_lang = lang if lang in ("de", "en") else det["language"]
-    if detected_lang not in ("de", "en"):
+    detected_lang = lang if lang in supported_langs else det["language"]
+    if detected_lang not in supported_langs:
         detected_lang = "de"
 
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     trans_file = os.path.join(base_dir, "catalog", "languages", detected_lang, "transforms.yaml")
 
     data = parse_transforms_simple(trans_file)

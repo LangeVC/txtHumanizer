@@ -1,0 +1,24 @@
+language: "pt"
+dialect_groups:
+  - id: "nordestino"
+    name: "Dialeto nordestino"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "oxente"
+      - "vixe"
+      - "arretado"
+      - "mainha"
+      - "painho"
+      - "visse"
+
+  - id: "carioca"
+    name: "Gírias cariocas"
+    signal: "positive_human_marker"
+    weight_offset: -0.7
+    markers:
+      - "mermão"
+      - "ko"
+      - "parça"
+      - "sinistro"
+      - "valeu"

@@ -1,0 +1,26 @@
+language: "it"
+dialect_groups:
+  - id: "romanesco"
+    name: "Dialetto romanesco"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "daje"
+      - "annamo"
+      - "stamo"
+      - "ao"
+      - "namo"
+      - "piagne"
+      - "famo"
+
+  - id: "napoletano"
+    name: "Dialetto napoletano"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "uè"
+      - "guagliò"
+      - "comm'a"
+      - "chillu"
+      - "chillo"
+      - "maronn'"

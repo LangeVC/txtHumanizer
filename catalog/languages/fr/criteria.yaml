@@ -1,0 +1,48 @@
+# txt-humanizer Criteria Catalog: French (fr)
+# Schema: catalog-criteria-v1
+
+language: "fr"
+name: "Français"
+
+criteria:
+  - id: "FR-BOT-LEAK"
+    name: "Fuite de dialogue chatbot"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Salutations ou formules résiduelles de modèles conversationnels."
+    triggers:
+      - "Certainement !"
+      - "En tant que modèle linguistique"
+      - "J'espère que cela vous aide"
+      - "Voici un récapitulatif"
+      - "N'hésitez pas si vous avez d'autres questions"
+
+  - id: "FR-CLICHE-DISCOURS"
+    name: "Formules rhétoriques d'autorité et clichés IA"
+    tier: 2
+    weight: 0.6
+    category: "rhetorical_cliche"
+    description: "Phrases d'introduction et d'emphase répétées de manière artificielle par les LLMs."
+    triggers:
+      - "Il est important de souligner que"
+      - "Il convient de noter que"
+      - "Force est de constater que"
+      - "Joue un rôle crucial dans"
+      - "Joue un rôle primordial"
+      - "Témoigne de l'importance de"
+      - "Au cœur des préoccupations"
+      - "En résumé"
+      - "En conclusion"
+      - "Sans l'ombre d'un doute"
+
+  - id: "FR-SYMMETRY"
+    name: "Symétrie artificielle et balancement forcé"
+    tier: 2
+    weight: 0.5
+    category: "structural_symmetry"
+    description: "Formules stéréotypées de balance 'D'une part... d'autre part'."
+    triggers:
+      - "D'une part, d'autre part"
+      - "Non seulement, mais aussi"
+      - "Tant sur le plan que sur"

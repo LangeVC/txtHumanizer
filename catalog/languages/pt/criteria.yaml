@@ -1,0 +1,47 @@
+# txt-humanizer Criteria Catalog: Portuguese (pt)
+# Schema: catalog-criteria-v1
+
+language: "pt"
+name: "Português"
+
+criteria:
+  - id: "PT-BOT-LEAK"
+    name: "Vazamento de diálogo de chatbot"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Saudações ou desculpas de IA esquecidas no texto."
+    triggers:
+      - "Certamente!"
+      - "Como modelo de linguagem"
+      - "Espero que isso ajude"
+      - "Aqui está um resumo de"
+      - "Sinta-se à vontade para perguntar se precisar de mais detalhes"
+
+  - id: "PT-CLICHE-DISCOURS"
+    name: "Clichês retóricos e ênfase vazia"
+    tier: 2
+    weight: 0.6
+    category: "rhetorical_cliche"
+    description: "Fórmulas enfáticas e repetitivas geradas por LLMs em português."
+    triggers:
+      - "É fundamental ressaltar que"
+      - "É importante destacar que"
+      - "Desempenha um papel crucial em"
+      - "Desempenha um papel fundamental"
+      - "Em suma"
+      - "Em conclusão"
+      - "Ao longo da história"
+      - "Sem dúvida alguma"
+      - "Vale ressaltar que"
+
+  - id: "PT-SYMMETRY"
+    name: "Simetria estrutural forçada"
+    tier: 2
+    weight: 0.5
+    category: "structural_symmetry"
+    description: "Fórmulas artificiais de contraponto."
+    triggers:
+      - "Por um lado, por outro lado"
+      - "Não apenas, mas também"
+      - "Tanto no âmbito quanto no"

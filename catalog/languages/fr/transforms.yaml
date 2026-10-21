@@ -1,0 +1,20 @@
+language: "fr"
+transforms:
+  - trigger: "Il est important de souligner que"
+    replacements:
+      - "Remarquons que"
+      - "Notons que"
+      - ""
+    strategy: "delete_or_shorten"
+
+  - trigger: "Force est de constater que"
+    replacements:
+      - "On constate que"
+      - "Il apparaît que"
+    strategy: "simplify"
+
+  - trigger: "Joue un rôle crucial dans"
+    replacements:
+      - "Influence directement"
+      - "Participe activement à"
+    strategy: "action_verb"

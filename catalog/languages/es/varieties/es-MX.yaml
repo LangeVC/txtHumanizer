@@ -1,0 +1,12 @@
+variety: "es-MX"
+name: "Español mexicano"
+shield_type: "lexical_inconsistency_shield"
+description: "Vocabulario mexicano legítimo protegido contra falsos positivos."
+protected_terms:
+  - "platicar"
+  - "computadora"
+  - "carro"
+  - "alberca"
+  - "chamarra"
+  - "departamento"
+  - "elevador"

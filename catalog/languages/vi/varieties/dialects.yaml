@@ -1,0 +1,30 @@
+language: "vi"
+dialect_groups:
+  - id: "nghe_tinh"
+    name: "Tiếng Nghệ Tĩnh & miền Trung"
+    signal: "positive_human_marker"
+    weight_offset: -0.9
+    markers:
+      - "mô"
+      - "tê"
+      - "răng"
+      - "rứa"
+      - "nỏ"
+      - "nhút"
+      - "chi"
+      - "chộ"
+
+  - id: "nam_bo_dan_da"
+    name: "Khẩu ngữ Nam Bộ & Miền Tây"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "nghen"
+      - "hen"
+      - "nè"
+      - "hổng"
+      - "mần"
+      - "xỉn"
+      - "xạo"
+      - "rảnh"
+      - "hết sảy"

@@ -1,0 +1,12 @@
+variety: "pt-BR"
+name: "Português brasileiro"
+shield_type: "lexical_inconsistency_shield"
+description: "Vocabulário brasileiro legítimo protegido contra falsos positivos."
+protected_terms:
+  - "celular"
+  - "ônibus"
+  - "trem"
+  - "equipe"
+  - "esporte"
+  - "tela"
+  - "computador"

@@ -1,0 +1,27 @@
+language: "fr"
+dialect_groups:
+  - id: "verlan"
+    name: "Verlan"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "meuf"
+      - "keuf"
+      - "zarbi"
+      - "ouf"
+      - "reuch"
+      - "chelou"
+      - "relou"
+
+  - id: "argot"
+    name: "Argot parisien et familier"
+    signal: "positive_human_marker"
+    weight_offset: -0.6
+    markers:
+      - "bouquin"
+      - "fringues"
+      - "boulot"
+      - "môme"
+      - "gosse"
+      - "thune"
+      - "kiffer"

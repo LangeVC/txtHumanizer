@@ -1,0 +1,20 @@
+language: "es"
+transforms:
+  - trigger: "Es fundamental destacar que"
+    replacements:
+      - "Destaca que"
+      - "Nótese que"
+      - ""
+    strategy: "delete_or_shorten"
+
+  - trigger: "Cabe mencionar que"
+    replacements:
+      - "Conviene señalar que"
+      - "Además,"
+    strategy: "simplify"
+
+  - trigger: "Juega un papel crucial en"
+    replacements:
+      - "Influye en"
+      - "Determina"
+    strategy: "action_verb"

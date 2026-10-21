@@ -56,20 +56,27 @@ Examples:
     scan_parser.add_argument("--ext", default="md,txt", help="Comma-separated file extensions to scan (default: md,txt)")
     scan_parser.add_argument("--report-file", default=None, help="Path to write JSON/Markdown summary report")
     scan_parser.add_argument("--fail-on", choices=["suspect", "review"], help="Exit with code 1 if any file triggers this level")
+    scan_parser.add_argument("--workers", default="auto", help="Parallel worker processes (auto or integer N)")
 
     # 4. transform
     trans_parser = subparsers.add_parser("transform", aliases=["humanize"], parents=[common], help="Apply rule-based vocabulary and syntax humanization")
     trans_parser.add_argument("input", nargs="?", default="-", help="File to transform or '-' for stdin")
     trans_parser.add_argument("-i", "--in-place", action="store_true", help="Write changes directly back to file")
     trans_parser.add_argument("--diff", action="store_true", help="Show colored unified diff of changes")
-    trans_parser.add_argument("--lang", default=None, help="Force language (de or en). Default: auto-detect")
+    trans_parser.add_argument("--lang", default=None, help="Force language. Default: auto-detect")
 
-    # 5. rules
+    # 5. review
+    rev_parser = subparsers.add_parser("review", parents=[common], help="Interactive line-by-line review and replacement of AI phrases")
+    rev_parser.add_argument("path", help="Path to text or markdown file")
+    rev_parser.add_argument("--backup", action="store_true", help="Create a .bak copy before modifying")
+    rev_parser.add_argument("--lang", default=None, help="Force language catalog (de, en, fr, es, it, pt, vi)")
+
+    # 6. rules
     rules_parser = subparsers.add_parser("rules", parents=[common], help="Explore catalog criteria and scoring weights")
-    rules_parser.add_argument("--lang", default="de", choices=["de", "en"], help="Language catalog to inspect (default: de)")
+    rules_parser.add_argument("--lang", default="de", choices=["de", "en", "fr", "es", "it", "pt", "vi"], help="Language catalog to inspect (default: de)")
     rules_parser.add_argument("--tier", type=int, choices=[1, 2, 3], help="Filter by tier level (1, 2, or 3)")
 
-    # 6. init-hook
+    # 7. init-hook
     hook_parser = subparsers.add_parser("init-hook", parents=[common], help="Install Git pre-commit hook in the current repository")
     hook_parser.add_argument("--fail-on", default="suspect", choices=["suspect", "review"], help="Level at which hook blocks commit")
 
@@ -95,6 +102,9 @@ Examples:
         elif args.command in ("transform", "humanize"):
             from txthumanizer.commands.transform_cmd import run_transform
             return run_transform(args, is_json=is_json)
+        elif args.command == "review":
+            from txthumanizer.commands.review_cmd import run_review
+            return run_review(args, is_json=is_json)
         elif args.command == "rules":
             from txthumanizer.commands.rules_cmd import run_rules
             return run_rules(args, is_json=is_json)

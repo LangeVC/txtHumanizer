@@ -1,0 +1,26 @@
+language: "es"
+dialect_groups:
+  - id: "lunfardo"
+    name: "Lunfardo rioplatense"
+    signal: "positive_human_marker"
+    weight_offset: -0.8
+    markers:
+      - "che"
+      - "pibe"
+      - "morfi"
+      - "guita"
+      - "mina"
+      - "quilombo"
+      - "chabón"
+
+  - id: "mexicano_coloquial"
+    name: "Modismos mexicanos"
+    signal: "positive_human_marker"
+    weight_offset: -0.7
+    markers:
+      - "chido"
+      - "chamba"
+      - "neta"
+      - "güey"
+      - "padre"
+      - "orale"

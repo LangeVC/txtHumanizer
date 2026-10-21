@@ -1,0 +1,20 @@
+language: "vi"
+transforms:
+  - trigger: "Đáng chú ý là"
+    replacements:
+      - "Đặc biệt,"
+      - "Thực tế cho thấy"
+      - ""
+    strategy: "delete_or_shorten"
+
+  - trigger: "Không thể phủ nhận rằng"
+    replacements:
+      - "Rõ ràng là"
+      - "Thực tế,"
+    strategy: "simplify"
+
+  - trigger: "Đóng vai trò quan trọng trong"
+    replacements:
+      - "Tác động trực tiếp đến"
+      - "Quyết định"
+    strategy: "action_verb"

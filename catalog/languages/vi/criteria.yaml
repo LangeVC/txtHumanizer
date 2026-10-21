@@ -1,0 +1,48 @@
+# txt-humanizer Criteria Catalog: Vietnamese (vi)
+# Schema: catalog-criteria-v1
+
+language: "vi"
+name: "Tiếng Việt"
+
+criteria:
+  - id: "VI-BOT-LEAK"
+    name: "Rò rỉ đối thoại chatbot"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Lời chào hoặc phản hồi đặc trưng của chatbot AI bị dán nhầm vào văn bản."
+    triggers:
+      - "Chắc chắn rồi!"
+      - "Với tư cách là một mô hình ngôn ngữ AI"
+      - "Hy vọng điều này sẽ giúp ích cho bạn"
+      - "Dưới đây là bản tóm tắt"
+      - "Đừng ngần ngại đặt câu hỏi nếu bạn cần thêm thông tin"
+
+  - id: "VI-CLICHE-DISCOURS"
+    name: "Khuôn mẫu sáo rỗng và khẩu khí hành chính AI"
+    tier: 2
+    weight: 0.6
+    category: "rhetorical_cliche"
+    description: "Các cụm từ chuyển tiếp trịnh trọng, khuôn mẫu bị các mô hình ngôn ngữ lặp đi lặp lại."
+    triggers:
+      - "Đáng chú ý là"
+      - "Không thể phủ nhận rằng"
+      - "Đóng vai trò quan trọng trong"
+      - "Đóng vai trò then chốt"
+      - "Cần lưu ý rằng"
+      - "Tóm lại"
+      - "Nhìn chung"
+      - "Xét về mặt"
+      - "Trong bối cảnh hiện nay"
+      - "Một trong những yếu tố then chốt"
+
+  - id: "VI-SYMMETRY"
+    name: "Cấu trúc cân xứng nhân tạo"
+    tier: 2
+    weight: 0.5
+    category: "structural_symmetry"
+    description: "Các cặp liên từ gượng ép tạo đối xứng máy móc."
+    triggers:
+      - "Một mặt, mặt khác"
+      - "Không chỉ, mà còn"
+      - "Cả về phương diện lẫn"

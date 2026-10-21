@@ -10,6 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.0] - 2026-10-21
+
+### Added
+- **5 New Language Catalogs**: Full support for French (`fr`), Spanish (`es`), Italian (`it`), Portuguese (`pt`), and Vietnamese (`vi`).
+  - **French (`fr`)**: Metropolitan (`fr-FR`) vs Canadian (`fr-CA` Quebecois shields: *magasiner, courriel, char, fin de semaine*) + Argot & Verlan signals.
+  - **Spanish (`es`)**: Peninsular (`es-ES`) vs Mexican (`es-MX`) vs Argentine (`es-AR` with *voseo*, *che*, *pileta*, *remera*, *laburo*) + Lunfardo signals.
+  - **Italian (`it`)**: Standard Italian (`it-IT`) with North/South lexical protection + Romanesco and Neapolitan dialect signals.
+  - **Portuguese (`pt`)**: Bidirectional variety shields for Brazilian (`pt-BR`: *celular, trem, ônibus*) and European (`pt-PT`: *telemóvel, comboio, autocarro*) + Nordestino signals.
+  - **Vietnamese (`vi`)**: Northern (`vi-North` / Hanoi standard AI boilerplate detection) + Central (`vi-Central` / Nghệ Tĩnh & Huế: *mô, tê, răng, rứa, nỏ, chi*) + Southern (`vi-South` / Saigon & Mekong shields: *ly, máy lạnh, heo, bắp, nghen, hen, hổng, mần, xài*).
+- **Interactive Terminal Review (`review`)**: Line-by-line CLI command (`txt-humanizer review <file>`) allowing human-in-the-loop inspection and acceptance (`[y/n/a/e/q]`) of suggested transformations with optional `--backup`.
+- **High-Volume Multi-Core Tree Scanner**: `scan` command upgraded with `ProcessPoolExecutor` (`--workers auto|N`), gitignore awareness, and streaming file traversal, achieving >150 files/sec across massive codebases.
+- **Native Pre-Commit Plugin**: Added `.pre-commit-hooks.yaml` in repo root for instant zero-dependency integration via standard `pre-commit`.
+- **Multilingual Documentation & Navigation Badge Bar**: Localized READMEs (`README.en.md`, `README.fr.md`, `README.es.md`, `README.it.md`, `README.pt.md`, `README.vi.md`) with a unified button-style language navigation bar.
+
+---
+
 ## [0.4.0] - 2026-10-21
 
 ### Added

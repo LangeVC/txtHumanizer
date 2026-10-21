@@ -1,0 +1,14 @@
+language: "pt"
+transforms:
+  - trigger: "É fundamental ressaltar que"
+    replacements:
+      - "Ressalta-se que"
+      - "Nota-se que"
+      - ""
+    strategy: "delete_or_shorten"
+
+  - trigger: "Desempenha um papel crucial em"
+    replacements:
+      - "Influencia"
+      - "Determina"
+    strategy: "action_verb"

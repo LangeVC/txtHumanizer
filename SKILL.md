@@ -1,19 +1,20 @@
 ---
 name: txtHumanizer
-version: 0.4.0
+version: 0.5.0
 description: |
   Modulares, mehrsprachiges und dialektfähiges Drei-Stufen-Framework für
   Text-Humanisierung und KI-Muster-Erkennung inklusive eigenständiger CLI.
   Basiert auf den aktuellen Richtlinien von Wikipedia DE (Anzeichen für KI-generierte Inhalte)
   und Wikipedia EN (Signs of AI writing / WP:AISIGNS).
 
-  Highlights v0.4.0:
-  - CLI Suite: Vollwertige Terminal-Schnittstelle mit 'detect', 'check', 'scan', 'transform', 'rules', 'init-hook'.
-  - CI/CD & Agent Ready: Deterministische Exit-Codes, JSON-Ausgabe und Stdin-Pipes für Zero-Token-Heuristiken.
-  - Multilingual: Vollständige Unterstützung für Deutsch (`de`) und Englisch (`en`), modular erweiterbar.
-  - Varietäten- & Dialektschutz: Differenzierung für de-DE, de-AT, de-CH, en-US, en-GB (Style-Bleed).
-    Echte Dialekte gelten als positive menschliche Signale (Human Signals).
-  - Dreistufiges Gewichtungsmodell: Tier 1 (Harte Belege), Tier 2 (Stil-Muster), Tier 3 (Schwache Signale).
+  Highlights v0.5.0:
+  - 7 Sprachen unterstützt: Deutsch (`de`), Englisch (`en`), Französisch (`fr`),
+    Spanisch (`es`), Italienisch (`it`), Portugiesisch (`pt`), Vietnamesisch (`vi`).
+  - Umfassende Varietäten- & Dialektschilde: Schutz für fr-CA, es-MX, es-AR (Voseo/Lunfardo),
+    pt-BR vs pt-PT, sowie vietnamesische Dialektregionen (Bắc Bộ, Trung Bộ / Nghệ Tĩnh, Nam Bộ).
+  - Interaktiver Review-Modus: `txt-humanizer review <datei>` zur schrittweisen [y/n/a/e/q] Übernahme.
+  - Multi-Core High-Volume Scanner: Parallele Batch-Scans (`--workers auto`) für >10.000 Dateien in Sekunden.
+  - Native Pre-Commit Integration: `.pre-commit-hooks.yaml` im Repository-Root.
 allowed-tools:
   - Read
   - Write
@@ -26,7 +27,7 @@ allowed-tools:
 
 # txtHumanizer: Modulares & Mehrsprachiges Humanisierungs-Framework
 
-== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.4.0) ==
+== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.5.0) ==
 
 === ROLLE ===
 Du bist ein professionelles linguistisches System zur Erkennung und Entfernung
@@ -42,20 +43,28 @@ reine Stufe-1-Prüfung oder Spracherkennung direkt über die lokale CLI ausführ
 um Tokens im Kontextfenster zu sparen:
 - `txt-humanizer check <datei> --format json`
 - `txt-humanizer detect "<text>" --format json`
-- `txt-humanizer scan <ordner> --report-file report.json`
+- `txt-humanizer scan <ordner> --workers auto --report-file report.json`
+- `txt-humanizer review <datei>`
 Die CLI liefert dir strukturierte JSON-Ergebnisse zur direkten Weiterverarbeitung!
 
 === PRE-FLIGHT: SPRACH- & VARIETÄTENERKENNUNG ===
 Vor der eigentlichen Analyse führt das System eine automatische, deterministische
 Erkennung von Primärsprache und Varietät durch (nutzt `catalog/engine/detector.py`
 oder linguistische Anker):
-1. **Hauptsprache:** `de` (Deutsch) oder `en` (Englisch).
-2. **Sub-Varietät:**
+1. **Unterstützte Sprachen:**
+   - `de` (Deutsch), `en` (Englisch), `fr` (Französisch), `es` (Spanisch),
+     `it` (Italienisch), `pt` (Portugiesisch), `vi` (Vietnamesisch).
+2. **Sub-Varietäten & Schutzschilde:**
    - Deutsch: `de-DE` (Bundesdeutsch), `de-AT` (Österreich: Austriazismen wie *Jänner, Topfen, Stiege*), `de-CH` (Schweiz: Helvetismen wie *parkieren, Velo, Spital*, kein *ß*).
-   - Englisch: `en-US` (*-ize, -or*, Oxford Comma), `en-GB` (*-ise, -our*, keine US-Puffery), oder `en-hybrid` (*Style Bleed*: inkonsistente Mischung als starkes KI-Signal).
+   - Englisch: `en-US` (*-ize, -or*), `en-GB` (*-ise, -our*), oder `en-hybrid` (*Style Bleed*).
+   - Französisch: `fr-FR` (Metropolitan), `fr-CA` (Kanada / Québec: *magasiner, courriel, char, fin de semaine*).
+   - Spanisch: `es-ES` (Peninsular), `es-MX` (Mexiko), `es-AR` (Rioplatense: *voseo, pileta, laburo, che*).
+   - Italienisch: `it-IT` (Standard mit Nord/Süd Synonympaaren).
+   - Portugiesisch: `pt-BR` (Brasilien) vs `pt-PT` (Portugal: *celular/telemóvel, ônibus/autocarro*).
+   - Vietnamesisch: `vi-North` (Hà Nội Standard), `vi-Central` (Nghệ Tĩnh / Huế: *mô, tê, răng, rứa, nỏ*), `vi-South` (Sài Gòn / Mekong: *ly, máy lạnh, heo, bắp, nghen, hen, hổng, mần*).
 3. **Human Signals (Dialekt / Authentizität):**
-   - Echte Dialekte (Bairisch, Alemannisch, Kölsch, Plattdeutsch) oder ausgeprägte Satzbau-Variation (hohe Burstiness) wirken als **positive menschliche Signale** und reduzieren den Verdachtsscore aktiv.
-   - Regionale Standardbegriffe (Austriazismen, Helvetismen) dürfen **niemals als Fehler** gewertet werden!
+   - Echte Dialekte und Umgangssprache wirken als **positive menschliche Signale** und reduzieren den Verdachtsscore aktiv.
+   - Regionale Standardbegriffe dürfen **niemals als Fehler** gewertet werden!
 
 === PRÜFKRITERIEN & KATALOG-ANBINDUNG ===
 Die Kriterien sind hierarchisch strukturiert und werden aus dem Katalog geladen:

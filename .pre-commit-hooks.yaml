@@ -1,0 +1,7 @@
+- id: txt-humanizer
+  name: txt-humanizer
+  description: Evidence-based AI writing detector and text humanizer
+  entry: bin/txt-humanizer check --fail-on suspect
+  language: script
+  types: [text]
+  files: \.(md|txt|markdown)$

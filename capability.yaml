@@ -1,15 +1,14 @@
 name: LangeVC/txt-humanizer
-version: 0.4.0
+version: 0.5.0
 kind: skill
-description: "Modulares, mehrsprachiges und varietätensensitives KI-Erkennungs- und Humanisierungs-Framework inkl. CLI für Terminal & CI/CD."
+description: "Modulares, 7-sprachiges und varietätensensitives KI-Erkennungs- und Humanisierungs-Framework inkl. CLI für Terminal & CI/CD."
 long_description: >
   Modulares, mehrsprachiges und varietätensensitives Erkennungs- und
-  Humanisierungs-Framework. Erkennt und entfernt KI-Muster evidenzbasiert nach
-  den aktuellen Kriterien von Wikipedia DE (Anzeichen für KI-generierte Inhalte)
-  und Wikipedia EN (Signs of AI writing / WP:AISIGNS).
-  Unterstützt Standardvarietäten (de-DE, de-AT, de-CH, en-US, en-GB),
+  Humanisierungs-Framework für 7 Sprachen (DE, EN, FR, ES, IT, PT, VI).
+  Erkennt und entfernt KI-Muster evidenzbasiert nach Wikipedia-Kriterien.
+  Unterstützt Standardvarietäten (de-DE, de-AT, de-CH, en-US, en-GB, fr-CA, es-MX, es-AR, pt-BR, pt-PT, vi-Central, vi-South),
   erkennt dialektale Human Signals und schützt vor False Positives.
-  Bietet eine vollwertige CLI für Terminal-Usability und CI/CD-Pipelines.
+  Bietet eine vollwertige CLI mit Review-Modus, Pre-Commit-Plugin und Multicore-Scanner.
 author: LangeVC
 license: Apache-2.0
 homepage: https://github.com/LangeVC/txtHumanizer
@@ -23,12 +22,18 @@ tags:
   - multilingual
   - german
   - english
+  - french
+  - spanish
+  - italian
+  - portuguese
+  - vietnamese
   - ai-detection
   - varieties
   - dialects
   - agent-skill
   - claude-code
   - text-humanization
+  - pre-commit
   - wikipedia-ki-erkennung
   - wp-aisigns
   - skill

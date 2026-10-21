@@ -2,6 +2,7 @@
 """
 txt-humanizer Deterministic Language & Variety Detector
 Zero external dependencies. Runtime < 20ms.
+Supports: DE, EN, FR, ES, IT, PT, VI.
 """
 import re
 import time
@@ -20,7 +21,32 @@ STOPWORDS_EN = {
     "had", "by", "word", "but", "not", "what", "all", "were", "we", "when", "your"
 }
 
-# Regional lexical anchors
+STOPWORDS_FR = {
+    "le", "la", "les", "de", "des", "du", "un", "une", "et", "est", "en", "que",
+    "qui", "dans", "pour", "pas", "sur", "ce", "il", "sont", "avec", "nous", "vous", "au", "par"
+}
+
+STOPWORDS_ES = {
+    "el", "la", "los", "las", "de", "del", "un", "una", "unos", "unas", "y", "en",
+    "es", "por", "para", "con", "que", "su", "al", "como", "más", "pero", "este", "esta", "son"
+}
+
+STOPWORDS_IT = {
+    "il", "lo", "la", "i", "gli", "le", "di", "del", "della", "dei", "un", "uno",
+    "una", "e", "è", "in", "per", "con", "su", "che", "non", "si", "sono", "questo", "come"
+}
+
+STOPWORDS_PT = {
+    "o", "a", "os", "as", "de", "do", "da", "dos", "das", "um", "uma", "uns", "umas",
+    "e", "é", "em", "no", "na", "nos", "nas", "por", "para", "com", "que", "não", "se", "como"
+}
+
+STOPWORDS_VI = {
+    "và", "của", "là", "có", "được", "trong", "một", "cho", "người", "với", "các",
+    "những", "này", "đã", "để", "không", "khi", "tại", "từ", "nhiều", "về", "như", "thì"
+}
+
+# Regional lexical anchors & variety dictionaries
 HELVETISMS = {
     "parkieren", "grillieren", "velo", "billett", "natel", "trottoir", "spital",
     "traktandum", "traktanden", "estrich", "postcheck", "matur"
@@ -49,6 +75,43 @@ GB_INDICATORS = {
     "centre", "theatre", "travelled", "cancelled"
 }
 
+# French variety indicators
+QUEBECOIS = {"magasiner", "courriel", "char", "divan", "chicane", "stationnement", "breuvage", "fin de semaine"}
+DIALECT_MARKERS_FR = {
+    "verlan": ["meuf", "keuf", "zarbi", "ouf", "reuch", "chelou", "relou"],
+    "argot": ["bouquin", "fringues", "boulot", "môme", "gosse", "thune", "kiffer"]
+}
+
+# Spanish variety indicators
+ARGENTINE = {"pileta", "remera", "laburo", "colectivo", "frutilla", "che", "pibe", "morfi", "guita", "tenés", "podés"}
+MEXICAN = {"platicar", "computadora", "chamarra", "alberca", "chido", "chamba", "neta", "güey", "orale"}
+DIALECT_MARKERS_ES = {
+    "lunfardo": ["che", "pibe", "morfi", "guita", "mina", "quilombo", "chabón"],
+    "mexicano": ["chido", "chamba", "neta", "güey", "padre", "orale"]
+}
+
+# Italian dialect markers
+DIALECT_MARKERS_IT = {
+    "romanesco": ["daje", "annamo", "stamo", "ao", "namo", "piagne", "famo"],
+    "napoletano": ["uè", "guagliò", "comm'a", "chillu", "chillo", "maronn'"]
+}
+
+# Portuguese variety indicators
+PT_BR_INDICATORS = {"celular", "ônibus", "trem", "equipe", "esporte", "tela", "oxente", "vixe", "mermão"}
+PT_PT_INDICATORS = {"telemóvel", "autocarro", "comboio", "equipa", "desporto", "ecrã"}
+DIALECT_MARKERS_PT = {
+    "nordestino": ["oxente", "vixe", "arretado", "mainha", "painho"],
+    "carioca": ["mermão", "ko", "parça", "sinistro"]
+}
+
+# Vietnamese variety & dialect indicators
+VI_CENTRAL_INDICATORS = {"mô", "tê", "răng", "rứa", "chi", "nỏ", "nhút", "chộ", "đọi", "trốc", "cấy"}
+VI_SOUTH_INDICATORS = {"ly", "máy lạnh", "heo", "bắp", "xe hơi", "bự", "xài", "quẹo", "nghen", "hen", "hổng", "mần", "xỉn", "xạo"}
+DIALECT_MARKERS_VI = {
+    "nghe_tinh": ["mô", "tê", "răng", "rứa", "nỏ", "nhút", "chộ"],
+    "nam_bo": ["nghen", "hen", "nè", "hổng", "mần", "xỉn", "xạo", "rảnh", "hết sảy"]
+}
+
 
 def tokenize_words(text: str) -> List[str]:
     return [w.lower() for w in re.findall(r"\b[\w\-]+\b", text, re.UNICODE)]
@@ -61,32 +124,54 @@ def detect_language(text: str) -> Dict[str, Any]:
     if total_words == 0:
         return {"language": "unknown", "confidence": "none", "elapsed_ms": 0.0}
 
-    de_hits = sum(1 for w in words if w in STOPWORDS_DE)
-    en_hits = sum(1 for w in words if w in STOPWORDS_EN)
+    # Stopword counting
+    scores = {
+        "de": sum(1 for w in words if w in STOPWORDS_DE),
+        "en": sum(1 for w in words if w in STOPWORDS_EN),
+        "fr": sum(1 for w in words if w in STOPWORDS_FR),
+        "es": sum(1 for w in words if w in STOPWORDS_ES),
+        "it": sum(1 for w in words if w in STOPWORDS_IT),
+        "pt": sum(1 for w in words if w in STOPWORDS_PT),
+        "vi": sum(1 for w in words if w in STOPWORDS_VI)
+    }
 
-    # Check for dialect markers before resolving primary language tie
-    has_de_dialect = any(
-        any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers)
-        for markers in DIALECT_MARKERS_DE.values()
-    )
-    if has_de_dialect:
-        de_hits += 5
+    # Add character / diacritic hints
+    if any(c in text for c in "äöüßÄÖÜ"):
+        scores["de"] += 3
+    if any(c in text for c in "àâéèêëîïôùûçœæ"):
+        scores["fr"] += 2
+    if any(c in text for c in "ñáéíóú¿¡"):
+        scores["es"] += 2
+    if any(c in text for c in "ãõêôáéíóúç"):
+        scores["pt"] += 2
+    if any(c in text for c in "àèéìíîòóùú"):
+        scores["it"] += 1
+    if any(c in text for c in "àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ"):
+        scores["vi"] += 5
 
-    # Primary language resolution
-    if de_hits > en_hits:
-        primary_lang = "de"
-        conf = "high" if de_hits >= 3 else "medium"
-    elif en_hits > de_hits:
-        primary_lang = "en"
-        conf = "high" if en_hits >= 3 else "medium"
-    else:
-        # Check specific character clues
-        if any(c in text for c in "äöüßÄÖÜ"):
-            primary_lang = "de"
-            conf = "medium"
-        else:
-            primary_lang = "en"
-            conf = "low"
+    # Check dialect hints
+    for dial_name, markers in DIALECT_MARKERS_DE.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["de"] += 3
+    for dial_name, markers in DIALECT_MARKERS_FR.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["fr"] += 3
+    for dial_name, markers in DIALECT_MARKERS_ES.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["es"] += 3
+    for dial_name, markers in DIALECT_MARKERS_IT.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["it"] += 3
+    for dial_name, markers in DIALECT_MARKERS_PT.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["pt"] += 3
+    for dial_name, markers in DIALECT_MARKERS_VI.items():
+        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
+            scores["vi"] += 4
+
+    primary_lang = max(scores, key=scores.get)
+    max_score = scores[primary_lang]
+    conf = "high" if max_score >= 3 else ("medium" if max_score >= 1 else "low")
 
     variety = "standard"
     variety_details = {}
@@ -98,37 +183,20 @@ def detect_language(text: str) -> Dict[str, Any]:
         helv_found = [w for w in words if w in HELVETISMS]
         aust_found = [w for w in words if w in AUSTRICISMS]
 
-        # Dialect scanning
         for dial_name, markers in DIALECT_MARKERS_DE.items():
             found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
             if found_markers:
-                human_signals.append({
-                    "type": "dialect",
-                    "name": dial_name,
-                    "evidence": found_markers,
-                    "confidence": "high" if len(found_markers) >= 2 else "medium"
-                })
+                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
 
         if not has_eszett and (helv_found or "«" in text or "»" in text):
             variety = "de-CH"
-            variety_details = {
-                "name": "Schweizer Hochdeutsch",
-                "evidence": helv_found,
-                "uses_eszett": False
-            }
+            variety_details = {"name": "Schweizer Hochdeutsch", "evidence": helv_found}
         elif aust_found or "heuer" in words:
             variety = "de-AT"
-            variety_details = {
-                "name": "Österreichisches Deutsch",
-                "evidence": aust_found,
-                "uses_eszett": has_eszett
-            }
+            variety_details = {"name": "Österreichisches Deutsch", "evidence": aust_found}
         else:
             variety = "de-DE"
-            variety_details = {
-                "name": "Bundesdeutsch",
-                "uses_eszett": has_eszett
-            }
+            variety_details = {"name": "Bundesdeutsch"}
 
     # Variety detection for English
     elif primary_lang == "en":
@@ -145,22 +213,91 @@ def detect_language(text: str) -> Dict[str, Any]:
             }
         elif gb_found:
             variety = "en-GB"
-            variety_details = {
-                "name": "British English",
-                "evidence": gb_found
-            }
-        elif us_found:
-            variety = "en-US"
-            variety_details = {
-                "name": "American English",
-                "evidence": us_found
-            }
+            variety_details = {"name": "British English", "evidence": gb_found}
         else:
-            variety = "en-US" # Default international English baseline
-            variety_details = {
-                "name": "Standard English (Baseline)",
-                "evidence": []
-            }
+            variety = "en-US"
+            variety_details = {"name": "American English", "evidence": us_found}
+
+    # Variety detection for French
+    elif primary_lang == "fr":
+        qc_found = [w for w in words if w in QUEBECOIS]
+        for dial_name, markers in DIALECT_MARKERS_FR.items():
+            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
+            if found_markers:
+                human_signals.append({"type": "colloquial_marker", "name": dial_name, "evidence": found_markers})
+
+        if qc_found:
+            variety = "fr-CA"
+            variety_details = {"name": "Français canadien / québécois", "evidence": qc_found}
+        else:
+            variety = "fr-FR"
+            variety_details = {"name": "Français métropolitain"}
+
+    # Variety detection for Spanish
+    elif primary_lang == "es":
+        ar_found = [w for w in words if w in ARGENTINE]
+        mx_found = [w for w in words if w in MEXICAN]
+        for dial_name, markers in DIALECT_MARKERS_ES.items():
+            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
+            if found_markers:
+                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+
+        if ar_found:
+            variety = "es-AR"
+            variety_details = {"name": "Español rioplatense", "evidence": ar_found}
+        elif mx_found:
+            variety = "es-MX"
+            variety_details = {"name": "Español mexicano", "evidence": mx_found}
+        else:
+            variety = "es-ES"
+            variety_details = {"name": "Español peninsular"}
+
+    # Variety detection for Italian
+    elif primary_lang == "it":
+        variety = "it-IT"
+        variety_details = {"name": "Italiano standard"}
+        for dial_name, markers in DIALECT_MARKERS_IT.items():
+            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
+            if found_markers:
+                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+
+    # Variety detection for Portuguese
+    elif primary_lang == "pt":
+        br_found = [w for w in words if w in PT_BR_INDICATORS]
+        pt_found = [w for w in words if w in PT_PT_INDICATORS]
+        for dial_name, markers in DIALECT_MARKERS_PT.items():
+            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
+            if found_markers:
+                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+
+        if br_found:
+            variety = "pt-BR"
+            variety_details = {"name": "Português brasileiro", "evidence": br_found}
+        elif pt_found:
+            variety = "pt-PT"
+            variety_details = {"name": "Português europeu", "evidence": pt_found}
+        else:
+            variety = "pt-BR"
+            variety_details = {"name": "Português padrão"}
+
+    # Variety detection for Vietnamese
+    elif primary_lang == "vi":
+        central_found = [w for w in words if w in VI_CENTRAL_INDICATORS]
+        south_found = [w for w in words if w in VI_SOUTH_INDICATORS]
+        for dial_name, markers in DIALECT_MARKERS_VI.items():
+            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
+            if found_markers:
+                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+
+        if central_found:
+            variety = "vi-Central"
+            variety_details = {"name": "Tiếng Việt miền Trung (Nghệ Tĩnh / Huế)", "evidence": central_found}
+        elif south_found:
+            variety = "vi-South"
+            variety_details = {"name": "Tiếng Việt miền Nam (Sài Gòn / Mekong)", "evidence": south_found}
+        else:
+            variety = "vi-North"
+            variety_details = {"name": "Tiếng Việt miền Bắc (Hà Nội chuẩn)"}
 
     elapsed_ms = (time.perf_counter() - t0) * 1000.0
 

@@ -1,0 +1,47 @@
+# txt-humanizer Criteria Catalog: Italian (it)
+# Schema: catalog-criteria-v1
+
+language: "it"
+name: "Italiano"
+
+criteria:
+  - id: "IT-BOT-LEAK"
+    name: "Fuga di dialogo chatbot"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Saluti o scuse tipiche dei chatbot copiate inavvertitamente."
+    triggers:
+      - "Certamente!"
+      - "Come modello linguistico di intelligenza artificiale"
+      - "Spero che questo ti sia utile"
+      - "Ecco una panoramica di"
+      - "Non esitare a chiedere se hai bisogno di chiarimenti"
+
+  - id: "IT-CLICHE-DISCOURS"
+    name: "Cliché retorici e formule di riempimento"
+    tier: 2
+    weight: 0.6
+    category: "rhetorical_cliche"
+    description: "Formule enfatiche ripetute dai modelli di linguaggio in italiano."
+    triggers:
+      - "È fondamentale sottolineare che"
+      - "È importante notare che"
+      - "Gioca un ruolo cruciale in"
+      - "Gioca un ruolo fondamentale"
+      - "In sintesi"
+      - "In conclusione"
+      - "Nel corso della storia"
+      - "Senza ombra di dubbio"
+      - "Vale la pena ricordare che"
+
+  - id: "IT-SYMMETRY"
+    name: "Simmetria artificiale del discorso"
+    tier: 2
+    weight: 0.5
+    category: "structural_symmetry"
+    description: "Formule forzate di bilanciamento argomentativo."
+    triggers:
+      - "Da un lato, dall'altro lato"
+      - "Non solo, ma anche"
+      - "Sia sul piano che sul piano"
