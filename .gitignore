@@ -5,3 +5,9 @@
 .skillweave/sequences/*
 !.skillweave/sequences/txthumanizer-v0.0.2-execution-sequence.md
 .DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
+dist/
+build/
+*.egg-info/

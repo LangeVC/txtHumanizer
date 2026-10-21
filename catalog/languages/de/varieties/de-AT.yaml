@@ -1,0 +1,39 @@
+# txt-humanizer Variety Profile: Österreichisches Deutsch (de-AT)
+# Schema: catalog-criteria-v1
+
+variety_id: "de-AT"
+parent_language: "de"
+name: "Österreichisches Standarddeutsch"
+standard: "Österreichisches Wörterbuch (ÖWB)"
+
+orthography:
+  uses_eszett: true
+  primary_quotes: "„“"
+
+lexicon_accepted:
+  - "Jänner"
+  - "Feber"
+  - "Topfen"
+  - "Stiege"
+  - "Paradeiser"
+  - "Erdapfel"
+  - "Obers"
+  - "Kukuruz"
+  - "Marille"
+  - "Karfiol"
+  - "Beiried"
+  - "spitalreif"
+  - "Matura"
+  - "Semmel"
+  - "Kren"
+  - "Fisolen"
+  - "Sessel" # statt Stuhl
+  - "heuer"  # in diesem Jahr
+
+syntax_accepted:
+  - "Perfekt mit sein bei Positionsverben ('ich bin gestanden/gesessen/gelegen')"
+  - "Fugen-s bei Komposita ('Aufnahmsprüfung', 'Zugsverspätung')"
+
+false_positive_shield:
+  description: "Österreichische Spezifika dürfen NIEMALS als unidiomatisch oder fehlerhaft gewertet werden."
+  penalty_suppression: ["K11", "K14", "C14"]

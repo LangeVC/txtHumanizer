@@ -1,0 +1,58 @@
+# txt-humanizer Transformation Rules: German (de)
+# Schema: catalog-criteria-v1
+
+language: "de"
+
+transforms:
+  - id: "R1"
+    name: "Von generisch zu spezifisch"
+    target_criteria: ["K1", "K7", "C11"]
+    rule: "Ersetze Worthülsen durch konkrete Fakten, Zahlen, Eigennamen oder Jahreszahlen."
+    example_before: "Künstliche Intelligenz ist ein bedeutendes Themenfeld von hoher Relevanz."
+    example_after: "Künstliche Intelligenz bezeichnet maschinelle Lernverfahren, die seit 2012 durch tiefe neuronale Netze praktische Durchbrüche erzielten."
+
+  - id: "R2"
+    name: "Von passiv zu aktiv"
+    target_criteria: ["K2", "K7"]
+    rule: "Aktiviere unpersönliche Passivkonstruktionen."
+    example_before: "Es wird empfohlen, die Parameter anzupassen."
+    example_after: "Wir empfehlen, die Parameter anzupassen."
+
+  - id: "R3"
+    name: "Von nominal zu verbal"
+    target_criteria: ["K12"]
+    rule: "Löse erstarrte Substantivierungen in lebendige Verben auf."
+    example_before: "Die Durchführung der Überprüfung der Dokumente erfolgte gestern."
+    example_after: "Wir prüften die Dokumente gestern."
+
+  - id: "R4"
+    name: "Von Meta zu direkt"
+    target_criteria: ["K2"]
+    rule: "Streiche Metafloskeln restlos. Lass die Aussage für sich selbst stehen."
+    example_before: "Es ist wichtig zu betonen, dass Sicherheit oberste Priorität genießt."
+    example_after: "Sicherheit genießt oberste Priorität."
+
+  - id: "R5"
+    name: "Rhythmische Variation (Auflösen des KI-Takts)"
+    target_criteria: ["K4", "K9", "K10"]
+    rule: "Mische bewusst kurze und längere Sätze. Baue unvollständige Gedanken oder Einschübe ein."
+    example_before: "Das Modell analysiert die Eingabedaten. Danach erfolgt die Filterung der Parameter. Abschließend wird das Ergebnis ausgegeben."
+    example_after: "Das Modell nimmt die Daten auf. Ein kurzer Filterlauf genügt – und schon liegt das Ergebnis vor."
+
+  - id: "R6"
+    name: "Auflösen starrer Dreierlisten"
+    target_criteria: ["K5"]
+    rule: "Reduziere auf die 1-2 wesentlichen Punkte oder nenne 4 konkrete Beispiele."
+    example_before: "Wir bieten Effizienz, Nachhaltigkeit und Innovation."
+    example_after: "Wir senken die Betriebskosten um ein Drittel und sparen dabei Energie."
+
+  - id: "R7"
+    name: "Von Kunstwort zu natürlicher Sprache"
+    target_criteria: ["K11", "K14"]
+    rule: "Ersetze überstrapazierte Denglisch-Verben und Modewörter durch idiomatische deutsche Begriffe."
+    replacements:
+      "implementieren": "umsetzen / einführen"
+      "adressieren": "angehen / behandeln"
+      "fokussieren": "sich konzentrieren auf"
+      "Sinn machen": "Sinn ergeben"
+      "in 2024": "2024 / im Jahr 2024"

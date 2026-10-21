@@ -1,0 +1,98 @@
+# txt-humanizer Criteria Catalog Specification
+# Version: 0.3.0
+# Schema: catalog-criteria-v1
+
+version: "0.3.0"
+schema: "catalog-criteria-v1"
+
+tiers:
+  tier_1:
+    name: "Hard Evidence & Hallucinations"
+    description: "Falsifiable errors, invented sources, bot metadata and dialogue leaks"
+    default_weight: 1.0
+    action: "immediate_high_confidence_flag"
+    evidence_required: "exact_quote_or_citation_check"
+    categories:
+      - "hallucinated_sources"
+      - "broken_identifiers"
+      - "chatbot_dialogue_leak"
+      - "prompt_refusal"
+      - "placeholder_artifacts"
+
+  tier_2:
+    name: "Strong Stylistic AI Patterns"
+    description: "Probabilistic patterns with high correlation to LLM outputs"
+    default_weight: 0.5
+    action: "probabilistic_score_accumulation"
+    evidence_required: "exact_quote_with_context"
+    categories:
+      - "puffery_and_inflated_significance"
+      - "ai_vocabulary_density"
+      - "superficial_participle_clauses"
+      - "copula_avoidance"
+      - "rule_of_three_triads"
+      - "negative_parallelisms"
+      - "connector_inflation"
+      - "formulaic_conclusion"
+      - "style_bleed_hybrid_variation"
+
+  tier_3:
+    name: "Weak Contextual Signals"
+    description: "Low-specificity stylistic signals; only significant when clustered"
+    default_weight: 0.15
+    action: "cumulative_contextual_support"
+    evidence_required: "structural_pattern_location"
+    categories:
+      - "uniform_paragraph_block_cadence"
+      - "hyper_grammatical_errorlessness"
+      - "em_dash_clustering"
+      - "title_case_heading_overuse"
+
+scoring:
+  thresholds:
+    clean:
+      range: [0.0, 0.9]
+      verdict: "unauffällig / überwiegend natürlich"
+      recommendation: "Keine grundlegende Überarbeitung notwendig"
+    review:
+      range: [1.0, 2.4]
+      verdict: "prüfenswert / vereinzelte KI-Muster vorhanden"
+      recommendation: "Gezielte Überarbeitung der markierten Stellen"
+    suspect:
+      range: [2.5, 999.0]
+      verdict: "deutlicher KI-Verdacht / hohe Musterdichte"
+      recommendation: "Vollständige Überarbeitung (Recommend + Finetune) empfohlen"
+
+decay_rules:
+  historic_indicators:
+    em_dash_overuse:
+      era: "GPT-4 (2022-2023)"
+      decay_factor: 0.10
+      note: "Substantially mitigated in recent post-training (GPT-4o, Claude 3.5)"
+    knowledge_cutoff_statements:
+      era: "Pre-2024"
+      decay_factor: 0.15
+      note: "Rarely emitted by modern instructed systems unless unprompted"
+    excessive_canned_politeness:
+      era: "ChatGPT-3.5"
+      decay_factor: 0.10
+      note: "Largely stripped by system level alignment"
+
+human_signals:
+  description: "Authentic human stylistic irregularities that actively offset AI suspicion score"
+  signals:
+    authentic_dialect_morphosyntax:
+      offset: -0.6
+      examples: ["Dativ statt Genitiv", "Ersatzinfinitiv", "regionale Partikeln"]
+    regional_idiomatic_vocabulary:
+      offset: -0.4
+      examples: ["Helvetismen in de-CH", "Austriazismen in de-AT"]
+    high_burstiness:
+      offset: -0.4
+      criteria: "Extreme sentence length variance (e.g. 2 words followed by 35 words)"
+    verified_niche_citations:
+      offset: -0.8
+      criteria: "Citations verified in domain registries"
+    genuine_minor_irregularities:
+      offset: -0.3
+      criteria: "Authentic typos or unconventional syntax not matching LLM tokenization errors"

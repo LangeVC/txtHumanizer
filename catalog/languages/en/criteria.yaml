@@ -1,0 +1,196 @@
+# txt-humanizer Criteria Catalog: English (en)
+# Based on: Wikipedia:Signs of AI writing (WP:AISIGNS)
+# Schema: catalog-criteria-v1
+
+language: "en"
+name: "English"
+
+criteria:
+  # ============================================================================
+  # TIER 1: HARD EVIDENCE & BOT RESIDUALS
+  # ============================================================================
+
+  - id: "EN-BOT-LEAK"
+    name: "Chatbot Conversational Fluff & Meta-Language"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Accidentally copy-pasted chatbot greeting, acknowledgment or closure."
+    triggers:
+      - "Certainly!"
+      - "Sure, here is"
+      - "I hope this helps"
+      - "As an AI language model"
+      - "I hope this email finds you well"
+      - "Here is a breakdown of"
+      - "Let me know if you need further assistance"
+
+  - id: "EN-HALLUCINATED-CITATION"
+    name: "Hallucinated or Mismatched Citations"
+    tier: 1
+    weight: 1.0
+    category: "hallucinated_sources"
+    description: "Fabricated DOIs, ISBNs, authors or URLs that lead to non-existent or completely unrelated articles."
+
+  - id: "EN-PLACEHOLDER"
+    name: "Unreplaced Placeholder Artifacts"
+    tier: 1
+    weight: 1.0
+    category: "placeholder_artifacts"
+    description: "Template brackets left in prose such as '[Insert Date Here]' or '[Your Name]'."
+
+  # ============================================================================
+  # TIER 2: STRONG STYLISTIC AI TELLS (WP:AISIGNS CORE)
+  # ============================================================================
+
+  - id: "EN-PUFFERY"
+    name: "Inflated Symbolism, Legacy & Monologue Puffery"
+    tier: 2
+    weight: 0.6
+    category: "puffery_and_inflated_significance"
+    description: "Exaggerating routine milestones into watershed events or cultural monuments."
+    triggers:
+      - "pivotal role"
+      - "watershed moment"
+      - "testament to"
+      - "beacon of"
+      - "enduring legacy"
+      - "rich tapestry"
+      - "indelible mark"
+      - "stands as a symbol"
+      - "game-changer"
+      - "groundbreaking"
+      - "paramount importance"
+
+  - id: "EN-AI-VOCAB"
+    name: "High Density AI Vocabulary"
+    tier: 2
+    weight: 0.5
+    category: "ai_vocabulary_density"
+    description: "Cluster of vocabulary items statistically overrepresented in LLM token distributions."
+    triggers:
+      - "delve"
+      - "tapestry"
+      - "intricate"
+      - "foster"
+      - "spearhead"
+      - "nuanced"
+      - "multifaceted"
+      - "comprehensive"
+      - "bustling"
+      - "resonate"
+      - "embark"
+      - "interplay"
+      - "garner"
+      - "poised to"
+      - "crucial"
+
+  - id: "EN-SUPERFICIAL"
+    name: "Superficial Participial Analysis (-ing Clauses)"
+    tier: 2
+    weight: 0.5
+    category: "superficial_participle_clauses"
+    description: "Attaching vague present participle phrases to the end of sentences to simulate depth."
+    triggers:
+      - "highlighting the importance of"
+      - "underscoring the need for"
+      - "showcasing a commitment to"
+      - "fostering a culture of"
+      - "ensuring seamless"
+      - "reflecting broader trends"
+      - "further cementing its status"
+    test_hint: "Check sentence codas for vague gerund phrases that lack hard factual backing."
+
+  - id: "EN-COPULA-AVOID"
+    name: "Avoidance of Basic Copulatives ('is' / 'are')"
+    tier: 2
+    weight: 0.4
+    category: "copula_avoidance"
+    description: "Replacing simple verbs ('is', 'was', 'are') with ornate functional substitutes."
+    triggers:
+      - "serves as a"
+      - "acts as a"
+      - "functions as a"
+      - "stands as a"
+      - "marks a"
+      - "represents a significant"
+    test_hint: "Does the writer consistently avoid 'X is Y' in favor of 'X serves as a Y'?"
+
+  - id: "EN-RULE-OF-THREE"
+    name: "Formulaic Triads (Rule of Three)"
+    tier: 2
+    weight: 0.5
+    category: "rule_of_three_triads"
+    description: "Rigid reliance on triplets of adjectives, nouns or parallel clauses."
+    triggers:
+      - "innovative, efficient, and scalable"
+      - "passion, dedication, and expertise"
+      - "fostering growth, driving change, and inspiring others"
+
+  - id: "EN-NEG-PARALLEL"
+    name: "Negative Parallelisms & Bipolar Contrasts"
+    tier: 2
+    weight: 0.4
+    category: "negative_parallelisms"
+    description: "Excessive use of balanced 'Not only... but also' contrasting constructs."
+    triggers:
+      - "not only ..., but also ..."
+      - "not just ..., but rather ..."
+      - "far from being a ..., it is a ..."
+
+  - id: "EN-CONNECTOR-OVERUSE"
+    name: "Connector Inflation"
+    tier: 2
+    weight: 0.4
+    category: "connector_inflation"
+    description: "Over-structuring transitions at sentence heads."
+    triggers:
+      - "Furthermore,"
+      - "Moreover,"
+      - "Additionally,"
+      - "Consequently,"
+      - "In addition,"
+      - "Nonetheless,"
+
+  - id: "EN-HEDGING"
+    name: "Canned Hedging & Excessive Neutrality Disclaimers"
+    tier: 2
+    weight: 0.4
+    category: "ai_vocabulary_density"
+    description: "Over-cautious meta-disclaimers embedding safety hedges into regular prose."
+    triggers:
+      - "It is important to remember that"
+      - "It is worth noting that"
+      - "While opinions may vary"
+      - "A nuanced perspective reveals"
+
+  - id: "EN-FORMULAIC-SECTION"
+    name: "Formulaic Outline Conclusions"
+    tier: 2
+    weight: 0.4
+    category: "formulaic_conclusion"
+    description: "Standard cookie-cutter summary blocks that restate prior points without new data."
+    triggers:
+      - "Challenges and Future Prospects"
+      - "In conclusion,"
+      - "In summary,"
+      - "Overall, the journey of"
+
+  # ============================================================================
+  # TIER 3: WEAK / HISTORICAL SIGNALS
+  # ============================================================================
+
+  - id: "EN-TITLE-CASE"
+    name: "Overuse of Title Case in Subheadings"
+    tier: 3
+    weight: 0.15
+    category: "title_case_heading_overuse"
+    description: "Capitalizing Every Word In Mid-Level Section Headings."
+
+  - id: "EN-HIST-EMDASH"
+    name: "Clustered Em-Dashes"
+    tier: 3
+    weight: 0.10
+    decay_factor: 0.10
+    category: "em_dash_clustering"
+    description: "Abnormal density of em-dashes (—) without spaces in running text (decayed historical marker)."

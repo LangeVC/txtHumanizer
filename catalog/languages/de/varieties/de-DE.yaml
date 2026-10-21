@@ -1,0 +1,21 @@
+# txt-humanizer Variety Profile: Bundesdeutsch (de-DE)
+# Schema: catalog-criteria-v1
+
+variety_id: "de-DE"
+parent_language: "de"
+name: "Bundesdeutsches Hochdeutsch"
+standard: "Duden"
+
+orthography:
+  uses_eszett: true
+  primary_quotes: "„“"
+
+lexicon_accepted:
+  - "Januar"
+  - "Februar"
+  - "parken"
+  - "Fahrrad"
+  - "Fahrkarte"
+  - "Treppe"
+  - "Tomate"
+  - "Quark"

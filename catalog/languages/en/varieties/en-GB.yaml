@@ -1,0 +1,35 @@
+# txt-humanizer Variety Profile: British English (en-GB)
+# Schema: catalog-criteria-v1
+
+variety_id: "en-GB"
+parent_language: "en"
+name: "British English"
+
+orthography:
+  suffix_ise: true     # organise, realise
+  suffix_our: true     # colour, honour, labour
+  suffix_re: true      # centre, theatre
+  double_l_inflection: true # travelled, cancelled
+
+punctuation:
+  oxford_comma: "optional_or_rare"
+  quotes: "single_primary" # 'word'
+  period_placement: "outside_quotes" # '. or ',
+
+date_format: "DD/MM/YYYY"
+
+style_bleed_rules:
+  description: |
+    LLMs trained primarily on US text often produce hybrid styles when instructed
+    to write in British English (e.g. British spelling combined with US date formats,
+    US puffery, or US punctuation placement). This contradiction is a strong AI tell.
+  triggers:
+    - name: "Mixed Suffix Inconsistency"
+      condition: "Presence of both -ise and -ize or -our and -or in the same text"
+      weight_penalty: 0.5
+    - name: "British Spelling with US Punctuation Placement"
+      condition: "British spelling alongside period placed inside quotation marks"
+      weight_penalty: 0.4
+    - name: "British Text with US Puffery Idioms"
+      condition: "British text containing 'watershed moment' or 'pivotal game-changer'"
+      weight_penalty: 0.5

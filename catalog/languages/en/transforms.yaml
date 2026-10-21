@@ -1,0 +1,52 @@
+# txt-humanizer Transformation Rules: English (en)
+# Schema: catalog-criteria-v1
+
+language: "en"
+
+transforms:
+  - id: "EN-R1"
+    name: "Deflate Puffery & Ground Claims"
+    target_criteria: ["EN-PUFFERY"]
+    rule: "Replace inflated buzzwords with plain, precise facts and concrete metrics."
+    example_before: "Her appointment marked a watershed moment that serves as a testament to her enduring legacy."
+    example_after: "Her appointment in 2021 made her the first female director in the company's 40-year history."
+
+  - id: "EN-R2"
+    name: "Eliminate AI Vocabulary Tropes"
+    target_criteria: ["EN-AI-VOCAB"]
+    rule: "Swap out LLM high-frequency words for natural conversational equivalents."
+    replacements:
+      "delve into": "look at / examine / explore"
+      "rich tapestry": "history / mix / complex story"
+      "spearhead": "lead / run / start"
+      "foster": "encourage / support / build"
+      "multifaceted": "complex / varied"
+      "poised to": "ready to / set to"
+
+  - id: "EN-R3"
+    name: "Restore Basic Copulatives"
+    target_criteria: ["EN-COPULA-AVOID"]
+    rule: "Use 'is' or 'are' instead of circumlocutions like 'serves as' or 'stands as'."
+    example_before: "The new bridge serves as a vital artery for the region."
+    example_after: "The new bridge is the main route across the river."
+
+  - id: "EN-R4"
+    name: "Prune Superficial Participial Codas"
+    target_criteria: ["EN-SUPERFICIAL"]
+    rule: "Cut trailing '-ing' fluff clauses; make the consequence an active sentence if it actually matters."
+    example_before: "The firm cut prices by 15%, highlighting its commitment to customer satisfaction."
+    example_after: "The firm cut prices by 15% to attract budget-conscious buyers."
+
+  - id: "EN-R5"
+    name: "Break Formulaic Triads"
+    target_criteria: ["EN-RULE-OF-THREE"]
+    rule: "Stop forcing everything into three items. State the 1-2 that matter or list four specifics."
+    example_before: "We deliver agility, scalability, and transparency."
+    example_after: "We cut deployment times in half."
+
+  - id: "EN-R6"
+    name: "Strip Meta-Hedging"
+    target_criteria: ["EN-HEDGING", "EN-BOT-LEAK"]
+    rule: "Delete conversational preamble and canned disclaimers entirely."
+    example_before: "It is worth noting that while challenges exist, opportunities remain vast."
+    example_after: "The main challenge is supply delay; demand is already high."

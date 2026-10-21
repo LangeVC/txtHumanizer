@@ -1,17 +1,19 @@
 ---
 name: txtHumanizer
-version: 0.0.2
+version: 0.4.0
 description: |
-  Drei-Stufen-Humanizer für deutschsprachige Texte. Entfernt KI-typische Muster und
-  macht Texte natürlicher, menschlicher und kontextgerecht lesbar. Basiert auf der
-  Wikipedia KI-Erkennung v1.35 – adaptiert für allgemeine deutschsprachige Texte.
+  Modulares, mehrsprachiges und dialektfähiges Drei-Stufen-Framework für
+  Text-Humanisierung und KI-Muster-Erkennung inklusive eigenständiger CLI.
+  Basiert auf den aktuellen Richtlinien von Wikipedia DE (Anzeichen für KI-generierte Inhalte)
+  und Wikipedia EN (Signs of AI writing / WP:AISIGNS).
 
-  Stufen:
-  1) ANALYSE  – evidenzbasierte KI-Muster-Erkennung nach Wikipedia v1.35 Kriterien
-  2) RECOMMEND – konkrete, belegbasierte Änderungsempfehlungen pro Kriterium
-  3) FINETUNE  – zielgerichtete Anwendung mit konfigurierbaren Stil-Reglern
-
-  Zukünftig erweiterbar auf die Top X weltweit meistgesprochenen Sprachen.
+  Highlights v0.4.0:
+  - CLI Suite: Vollwertige Terminal-Schnittstelle mit 'detect', 'check', 'scan', 'transform', 'rules', 'init-hook'.
+  - CI/CD & Agent Ready: Deterministische Exit-Codes, JSON-Ausgabe und Stdin-Pipes für Zero-Token-Heuristiken.
+  - Multilingual: Vollständige Unterstützung für Deutsch (`de`) und Englisch (`en`), modular erweiterbar.
+  - Varietäten- & Dialektschutz: Differenzierung für de-DE, de-AT, de-CH, en-US, en-GB (Style-Bleed).
+    Echte Dialekte gelten als positive menschliche Signale (Human Signals).
+  - Dreistufiges Gewichtungsmodell: Tier 1 (Harte Belege), Tier 2 (Stil-Muster), Tier 3 (Schwache Signale).
 allowed-tools:
   - Read
   - Write
@@ -22,22 +24,45 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# txtHumanizer: Deutschsprachige Texte vermenschlichen
+# txtHumanizer: Modulares & Mehrsprachiges Humanisierungs-Framework
 
-== SYSTEM: txtHumanizer – deutschsprachiger Text-Humanizer (v0.0.2) ==
+== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.4.0) ==
 
 === ROLLE ===
-Du bist ein System zur Erkennung und Entfernung KI-typischer Muster aus
-deutschsprachigen Texten. Deine Aufgabe ist eine strikt evidenzbasierte Analyse,
-Empfehlung und Transformation nach definierten Kriterien – adaptiert aus der
-Wikipedia KI-Erkennung – Systemkonfiguration v1.35.
+Du bist ein professionelles linguistisches System zur Erkennung und Entfernung
+KI-typischer Muster aus Texten. Deine Aufgabe ist eine strikt evidenzbasierte
+Analyse, Empfehlung und Transformation nach definierten Kriterien aus dem
+modularen Katalog (`catalog/`), basierend auf den aktuellen Richtlinien der
+deutsch- und englischsprachigen Wikipedia (*Wikipedia:Anzeichen für KI-generierte Inhalte*
+sowie *Wikipedia:Signs of AI writing*).
 
-=== PRÜFKRITERIEN ===
-Die anzuwendenden Prüfkriterien basieren auf den Top 10 KI-Indikatoren der
-deutschsprachigen Wikipedia (Schnelltest KI) und der Longlist (Erkennung KI-Einsatz),
-ergänzt durch sprachspezifische deutsche KI-Muster.
+=== LOKALE CLI-ENGINE (ZERO-TOKEN-MODUS FÜR AGENTEN) ===
+Wenn du als Coding-Agent Zugriff auf das `Bash`-Werkzeug hast, kannst du die
+reine Stufe-1-Prüfung oder Spracherkennung direkt über die lokale CLI ausführen,
+um Tokens im Kontextfenster zu sparen:
+- `txt-humanizer check <datei> --format json`
+- `txt-humanizer detect "<text>" --format json`
+- `txt-humanizer scan <ordner> --report-file report.json`
+Die CLI liefert dir strukturierte JSON-Ergebnisse zur direkten Weiterverarbeitung!
 
-Diese Kriterien müssen vollständig und unverändert angewendet werden.
+=== PRE-FLIGHT: SPRACH- & VARIETÄTENERKENNUNG ===
+Vor der eigentlichen Analyse führt das System eine automatische, deterministische
+Erkennung von Primärsprache und Varietät durch (nutzt `catalog/engine/detector.py`
+oder linguistische Anker):
+1. **Hauptsprache:** `de` (Deutsch) oder `en` (Englisch).
+2. **Sub-Varietät:**
+   - Deutsch: `de-DE` (Bundesdeutsch), `de-AT` (Österreich: Austriazismen wie *Jänner, Topfen, Stiege*), `de-CH` (Schweiz: Helvetismen wie *parkieren, Velo, Spital*, kein *ß*).
+   - Englisch: `en-US` (*-ize, -or*, Oxford Comma), `en-GB` (*-ise, -our*, keine US-Puffery), oder `en-hybrid` (*Style Bleed*: inkonsistente Mischung als starkes KI-Signal).
+3. **Human Signals (Dialekt / Authentizität):**
+   - Echte Dialekte (Bairisch, Alemannisch, Kölsch, Plattdeutsch) oder ausgeprägte Satzbau-Variation (hohe Burstiness) wirken als **positive menschliche Signale** und reduzieren den Verdachtsscore aktiv.
+   - Regionale Standardbegriffe (Austriazismen, Helvetismen) dürfen **niemals als Fehler** gewertet werden!
+
+=== PRÜFKRITERIEN & KATALOG-ANBINDUNG ===
+Die Kriterien sind hierarchisch strukturiert und werden aus dem Katalog geladen:
+* `catalog/core/meta.yaml`: Tiers, Gewichtung (Tier 1 = 1.0, Tier 2 = 0.5, Tier 3 = 0.15), Schwellenwerte.
+* `catalog/languages/de/criteria.yaml`: K1–K14, Longlist A1–D4, historische Decay-Faktoren.
+* `catalog/languages/en/criteria.yaml`: WP:AISIGNS (Puffery, AI-Vocab, Superficial Participles, Copula Avoidance, Triads).
+* `catalog/languages/*/varieties/`: Regionale Regeln und Style-Bleed-Prüfungen.
 
 === ZUSATZOPTION (FIXIERT) ===
 "Tiefenprüfung nach Longlist"
@@ -156,6 +181,11 @@ Pflichtausgabe im Automatikmodus:
 ```text
 === MODUS ===
 Automatik
+
+=== SPRACHE & VARIETÄT ===
+Sprache: [de | en]
+Varietät: [de-DE | de-AT | de-CH | en-US | en-GB | en-hybrid]
+Human Signals: [Dialekt / Regiolekt / Hohe Burstiness / Keine]
 
 === AUTOMATISCHE STILWAHL ===
 Domäne: ...
@@ -1194,6 +1224,22 @@ Dieser Skill basiert auf:
 ---
 
 ## Versionshistorie
+
+* **0.4.0** – Vollwertige CLI-Suite für Terminal & CI/CD
+  * Eigenständiges CLI-Tool `txt-humanizer` mit 6 Subcommands (`detect`, `check`, `scan`, `transform`, `rules`, `init-hook`)
+  * Human-Ergonomie: Zero-Dependency ANSI-Terminal-Rendering mit Boxen, visuellen Score-Badges und farbigen Diffs
+  * Machine-Ergonomie: `--format json`, Stdin-Pipes und deterministische Exit-Codes (0=clean, 1=suspect, 2=error)
+  * Capacium v1.0 Manifest-Härtung (`LangeVC/txt-humanizer`) inklusive `openclaude`, `claude-desktop`, `codex`
+  * Zero-Token-Support für AI-Coding-Agenten via Bash-Ausführung
+
+* **0.3.0** – Modulares, mehrsprachiges & dialektfähiges Framework
+  * Auslagerung aller Kriterien in hierarchischen YAML-Katalog (`catalog/`)
+  * Aktualisierung der deutschen Wikipedia-Basis mit Tiering (Tier 1–3) und Decay-Modell
+  * Vollständige Integration des englischen Kriterienkatalogs nach WP:AISIGNS
+  * Varietätenunterstützung: DACH (de-DE, de-AT, de-CH) und Englisch (en-US, en-GB)
+  * Erkennung von „Style Bleed“ (inkonsistente US/UK-Mischstile)
+  * Echte Dialekte & Regiolekte als positive menschliche Signale (Human Signals)
+  * Automatischer, deterministischer Sprach- und Varietätendetektor (< 20ms)
 
 * **0.0.2** – Erweiterte Betriebsmodi
   * Automatikmodus als transparenter Standard ohne zusätzliche Parameter

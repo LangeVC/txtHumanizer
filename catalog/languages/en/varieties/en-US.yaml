@@ -1,0 +1,19 @@
+# txt-humanizer Variety Profile: American English (en-US)
+# Schema: catalog-criteria-v1
+
+variety_id: "en-US"
+parent_language: "en"
+name: "American English"
+
+orthography:
+  suffix_ize: true     # organize, realize
+  suffix_or: true      # color, honor, labor
+  suffix_er: true      # center, theater
+  double_l_inflection: false # traveled, canceled
+
+punctuation:
+  oxford_comma: "customary"
+  quotes: "double_primary" # "word"
+  period_placement: "inside_quotes" # ." or ,"
+
+date_format: "MM/DD/YYYY"

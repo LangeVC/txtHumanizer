@@ -1,0 +1,59 @@
+# txt-humanizer Dialect & Regiolect Specification: German
+# Schema: catalog-criteria-v1
+
+language: "de"
+type: "human_signal_registry"
+
+description: |
+  LLMs neigen extrem zur 'Hyper-Standardisierung'. Authentische Dialekt- und
+  Umgangssprachmerkmale sind daher starke positive Indikatoren für menschliche Urheberschaft.
+  Erkannte dialektale Phänomene reduzieren den Gesamt-Score aktiv.
+
+dialects:
+  bairisch:
+    name: "Bairisch / Boarisch"
+    markers:
+      - "ned / nedda"
+      - "gell / gell ja"
+      - "dahoam"
+      - "ois / oisdann"
+      - "schaugn"
+      - "bisserl"
+      - "Griasdi / Servus"
+    syntax:
+      - "doppelte Verneinung ('koana ned')"
+      - "Dativ statt Genitiv ('dem Voda sei Auto')"
+    offset: -0.6
+
+  alemannisch_schwaebisch:
+    name: "Alemannisch / Schwäbisch"
+    markers:
+      - "net / nedd"
+      - "gell"
+      - "gucken / luaga"
+      - "wia / wia dr"
+      - "Schdimmd"
+      - "Mädle / Bub"
+      - "schee"
+    offset: -0.6
+
+  ripuarisch_koelsch:
+    name: "Kölsch / Rheinisch"
+    markers:
+      - "nit / wat / dat"
+      - "joot"
+      - "verzälle"
+      - "Fastelovend"
+      - "Alaaf"
+      - "Kölsche"
+    offset: -0.6
+
+  niederdeutsch_platt:
+    name: "Plattdeutsch / Niederdeutsch"
+    markers:
+      - "nich / nich wahr"
+      - "Moin / Moin Moin"
+      - "Snack / snacken"
+      - "Tüddelkram"
+      - "Lütt"
+    offset: -0.7

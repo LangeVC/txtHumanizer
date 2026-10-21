@@ -1,0 +1,290 @@
+# txt-humanizer Criteria Catalog: German (de)
+# Based on: Wikipedia:Anzeichen für KI-generierte Inhalte (aktuelle Fassung)
+# Schema: catalog-criteria-v1
+
+language: "de"
+name: "Deutsch"
+
+criteria:
+  # ============================================================================
+  # SCHNELLTEST KI (K1 - K14)
+  # ============================================================================
+
+  - id: "K1"
+    name: "Glatte, formelhafte Einleitung"
+    tier: 2
+    weight: 0.5
+    category: "puffery_and_inflated_significance"
+    description: "Die Einleitung beginnt mit einer generischen Schablone ohne spezifische Fakten oder historische Einordnung."
+    triggers:
+      - "bedeutendes"
+      - "wichtiges"
+      - "zentrales"
+      - "komplexes"
+      - "vielschichtiges"
+      - "essentielles"
+      - "grundlegendes"
+      - "maßgebliches"
+      - "entscheidendes Themenfeld"
+    test_hint: "Enthält der erste Satz konkrete Jahreszahlen, Namen oder Definitionen, oder lediglich universelle Schablonen?"
+
+  - id: "K2"
+    name: "Metafloskeln und Wichtigkeits-Konstruktionen"
+    tier: 2
+    weight: 0.5
+    category: "ai_vocabulary_density"
+    description: "Der Text weist den Leser explizit auf die Wichtigkeit hin, anstatt die Fakten sprechen zu lassen."
+    triggers:
+      - "Es ist wichtig zu betonen, dass"
+      - "Es sei darauf hingewiesen, dass"
+      - "Es sollte nicht unerwähnt bleiben, dass"
+      - "Hervorzuheben ist, dass"
+      - "An dieser Stelle muss betont werden"
+      - "Nicht zu vergessen ist"
+      - "Bemerkenswert ist, dass"
+      - "Zusammenfassend lässt sich sagen"
+    test_hint: "Schwelle: >= 2 Vorkommen im Text ist ein deutlicher Indikator."
+
+  - id: "K3"
+    name: "Konnektoren-Inflation"
+    tier: 2
+    weight: 0.5
+    category: "connector_inflation"
+    description: "Übermäßige Häufung logischer Satzverknüpfer, insbesondere am Satzanfang."
+    triggers:
+      - "darüber hinaus"
+      - "zudem"
+      - "ferner"
+      - "des Weiteren"
+      - "folglich"
+      - "infolgedessen"
+      - "demzufolge"
+      - "nichtsdestotrotz"
+      - "überdies"
+      - "hinzukommt"
+    test_hint: "Mehr als 3 Konnektoren pro Absatz oder Kombinationen wie 'darüber hinaus' + 'zudem' in direkter Folge."
+
+  - id: "K4"
+    name: "Gleichförmiger Satzrhythmus (KI-Takt)"
+    tier: 3
+    weight: 0.2
+    category: "uniform_paragraph_block_cadence"
+    description: "Sätze weisen monotone Längen und uniforme Subjekt-Verb-Objekt-Strukturen auf."
+    triggers:
+      - "wobei ..."
+      - "wodurch ..."
+      - "was dazu führt, dass ..."
+    test_hint: "Fehlen jegliche rhythmische Brüche oder kurze pointierte Einwürfe?"
+
+  - id: "K5"
+    name: "Dreierlisten (Trikolon / Rule of Three)"
+    tier: 2
+    weight: 0.5
+    category: "rule_of_three_triads"
+    description: "Gehäufte Verwendung von exakt drei Aufzählungselementen im Fließtext."
+    triggers:
+      - "sowohl X, als auch Y und Z"
+      - "Effizienz, Produktivität und Innovationskraft"
+      - "ökonomisch, ökologisch und sozial"
+      - "Transparenz, Nachhaltigkeit und Dynamik"
+    test_hint: "Zwei oder mehr Dreiergruppen in engem Abstand."
+
+  - id: "K6"
+    name: "Nicht nur ... sondern auch-Konstruktionen"
+    tier: 2
+    weight: 0.4
+    category: "negative_parallelisms"
+    description: "Stereotype bipolare Verstärkungs- und Kontraststrukturen."
+    triggers:
+      - "nicht nur ... sondern auch"
+      - "nicht allein ... vielmehr auch"
+      - "betrifft nicht nur A, sondern gleichermaßen B"
+    test_hint: "Mehrfaches Auftreten im selben Dokument."
+
+  - id: "K7"
+    name: "Vage Zuschreibungen ohne Quelle (Weasel Words)"
+    tier: 2
+    weight: 0.5
+    category: "puffery_and_inflated_significance"
+    description: "Pauschale Berufung auf Autoritäten oder Studien ohne konkrete Benennung."
+    triggers:
+      - "Experten sind sich einig"
+      - "Studien zeigen"
+      - "Die Forschung belegt"
+      - "Kritiker meinen"
+      - "Branchenkenner betonen"
+      - "Zahlreiche Untersuchungen bestätigen"
+    test_hint: "Jede Pauschalaussage ohne Autorenname, Jahreszahl oder Institution."
+
+  - id: "K8"
+    name: "Standard-Abschnitte ohne inhaltliche Notwendigkeit"
+    tier: 2
+    weight: 0.4
+    category: "formulaic_conclusion"
+    description: "Schematische Template-Überschriften mit austauschbarem Fließtext."
+    triggers:
+      - "Herausforderungen"
+      - "Zukunftsperspektiven"
+      - "Fazit und Ausblick"
+      - "Chancen und Risiken"
+      - "Implikationen für die Praxis"
+    test_hint: "Enthalten diese Abschnitte originäre Gedanken oder reines Template-Recycling?"
+
+  - id: "K9"
+    name: "Gleichförmige Absätze (Blockstruktur)"
+    tier: 3
+    weight: 0.15
+    category: "uniform_paragraph_block_cadence"
+    description: "Mehrere Absätze mit nahezu identischer Länge (je 3–5 Sätze: These, Erläuterung, Synthese)."
+    test_hint: "Optische und syntaktische Symmetrie der Textblöcke."
+
+  - id: "K10"
+    name: "Zu perfekte Übergänge"
+    tier: 3
+    weight: 0.15
+    category: "uniform_paragraph_block_cadence"
+    description: "Jeder Absatz schließt nahtlos und didaktisch geglättet an den vorigen an."
+    triggers:
+      - "Ein weiterer Aspekt betrifft"
+      - "In diesem Zusammenhang ist zu beachten"
+      - "Nicht zuletzt verdient Beachtung"
+
+  - id: "K11"
+    name: "Anglizismen und Denglisch-Muster"
+    tier: 2
+    weight: 0.4
+    category: "ai_vocabulary_density"
+    description: "Unidiomatische Lehnübersetzungen aus dem Englischen."
+    triggers:
+      - "Sinn machen"
+      - "in 2024"
+      - "adressieren"
+      - "implementieren"
+      - "fokussieren auf"
+      - "priorisieren"
+
+  - id: "K12"
+    name: "Nominalstil-Häufung"
+    tier: 2
+    weight: 0.4
+    category: "copula_avoidance"
+    description: "Extrem verdichtete Substantivierungen und Bandwurmsätze."
+    triggers:
+      - "Zurverfügungstellung"
+      - "Inbetriebnahmegenehmigung"
+      - "Maßnahmenumsetzung"
+      - "im Rahmen der Durchführung der Überprüfung"
+
+  - id: "K13"
+    name: "Übermäßige Partizipialkonstruktionen"
+    tier: 2
+    weight: 0.5
+    category: "superficial_participle_clauses"
+    description: "Gehäufte Verwendung von Partizip I (-end) zur künstlichen Bedeutungsaufladung."
+    triggers:
+      - "die sich daraus ergebenden Konsequenzen"
+      - "die zu berücksichtigenden Faktoren"
+      - "die nicht zu unterschätzende Bedeutung"
+      - "unterstreichend"
+      - "verdeutlichend"
+
+  - id: "K14"
+    name: "Deutsches KI-Vokabular"
+    tier: 2
+    weight: 0.6
+    category: "ai_vocabulary_density"
+    description: "Statistisch stark überrepräsentierte Vokabeln im deutschen LLM-Output."
+    triggers:
+      - "entscheidend"
+      - "maßgeblich"
+      - "facettenreich"
+      - "vielschichtig"
+      - "multidimensional"
+      - "Landschaft"
+      - "Zusammenspiel"
+      - "Wechselwirkung"
+      - "Paradigmenwechsel"
+      - "Transformationsprozess"
+      - "nachhaltig prägen"
+
+  # ============================================================================
+  # LONGLIST: KATEGORIE A (HARTE BELEGE & ARTEFAKTE)
+  # ============================================================================
+
+  - id: "A1"
+    name: "KI-generierte Texte ohne Quellenangabe"
+    tier: 1
+    weight: 1.0
+    category: "hallucinated_sources"
+    description: "Nichttriviale Behauptungen ohne jede Quellenbasis."
+
+  - id: "A3"
+    name: "Nicht existierende Quellen (Halluzination)"
+    tier: 1
+    weight: 1.0
+    category: "hallucinated_sources"
+    description: "Frei erfundene Autoren, Titel, DOIs, ISBNs oder tote Links."
+
+  - id: "A4"
+    name: "Beleginkongruenz"
+    tier: 1
+    weight: 0.9
+    category: "hallucinated_sources"
+    description: "Die Quelle existiert, stützt aber die getroffene Aussage inhaltlich nicht."
+
+  - id: "A8"
+    name: "Chatbot-Artefakte und Regieanweisungen"
+    tier: 1
+    weight: 1.0
+    category: "chatbot_dialogue_leak"
+    description: "Reste des Eingabe-Dialogs oder System-Prompts im Text."
+    triggers:
+      - "Hier ist eine Zusammenfassung"
+      - "Ich hoffe, das hilft Ihnen weiter"
+      - "Sicher! Hier ist der gewünschte Text"
+      - "Als KI-Modell"
+      - "Gerne erstelle ich"
+
+  - id: "A10"
+    name: "Versteckte Steuerzeichen / Zero-Width-Spaces"
+    tier: 1
+    weight: 1.0
+    category: "placeholder_artifacts"
+    description: "Unsichtbare Unicode-Zeichen (U+200B, U+202F, U+FEFF, U+2060) als Kopier- oder Wasserzeichen-Artefakte."
+
+  # ============================================================================
+  # LONGLIST: KATEGORIE C (STILISTISCHE INDIZIEN & WERBUNG)
+  # ============================================================================
+
+  - id: "C11"
+    name: "Werbliche Sprache / Puffery"
+    tier: 2
+    weight: 0.6
+    category: "puffery_and_inflated_significance"
+    description: "Unangemessen euphorischer oder werblicher Tonfall statt neutraler Sachlichkeit."
+    triggers:
+      - "bahnbrechend"
+      - "revolutionär"
+      - "Meilenstein"
+      - "wegweisend"
+      - "Vorreiterrolle"
+
+  # ============================================================================
+  # HISTORISCHE KRITERIEN MIT DECAY-FAKTOR
+  # ============================================================================
+
+  - id: "HIST-EMDASH"
+    name: "Übermäßige Gedankenstriche (Em-Dashes)"
+    tier: 3
+    weight: 0.1
+    decay_factor: 0.10
+    category: "em_dash_clustering"
+    description: "Gehäufte Verwendung von — statt normaler Interpunktion (Historischer Marker: GPT-4 2023, heute per RLHF geglättet)."
+
+  - id: "HIST-CUTOFF"
+    name: "Wissensgrenzen-Hinweise"
+    tier: 1
+    weight: 0.8
+    decay_factor: 0.15
+    category: "chatbot_dialogue_leak"
+    description: "Aussagen über Wissensgrenzen ('Bis zu meinem Wissensstand im Jahr...')."

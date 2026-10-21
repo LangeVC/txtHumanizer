@@ -30,7 +30,7 @@ jobs:
           mkdir -p dist
           tar -czf "dist/${TARBALL}" \
             --transform "s,^\.,txtHumanizer-v${VERSION}," \
-            SKILL.md README.md capability.yaml LICENSE
+            SKILL.md README.md capability.yaml LICENSE CHANGELOG.md setup.py bin catalog txthumanizer
           echo "TARBALL=${TARBALL}" >> $GITHUB_ENV
           echo "TARBALL_PATH=dist/${TARBALL}" >> $GITHUB_ENV
       - name: Upload tarball artifact

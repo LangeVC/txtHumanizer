@@ -1,0 +1,29 @@
+# txt-humanizer Variety Profile: Schweizer Hochdeutsch (de-CH)
+# Schema: catalog-criteria-v1
+
+variety_id: "de-CH"
+parent_language: "de"
+name: "Schweizer Hochdeutsch"
+standard: "Schweizerisches Idiotikon / Amtssprache Bund"
+
+orthography:
+  uses_eszett: false  # 'ss' statt 'ß' ist amtlicher Standard!
+  primary_quotes: "«»" # Französische Guillemets
+
+lexicon_accepted:
+  - "parkieren" # statt parken
+  - "grillieren" # statt grillen
+  - "Velo"      # statt Fahrrad
+  - "Billett"   # statt Fahrkarte / Ticket
+  - "Natel"     # statt Handy / Smartphone
+  - "Trottoir"  # statt Bürgersteig / Gehweg
+  - "Spital"    # statt Krankenhaus
+  - "Traktandum" # statt Tagesordnungspunkt
+  - "Estrich"   # statt Dachboden
+  - "Postcheck"
+  - "Gleis"     # statt Bahnsteig
+  - "Matur"     # statt Abitur
+
+false_positive_shield:
+  description: "Absenz des Buchstabens 'ß' sowie Helvetismen sind amtlicher Standard und kein KI-Fehler."
+  penalty_suppression: ["K11", "K14", "C3", "C14"]
