@@ -1,5 +1,5 @@
 owner: LangeVC
-name: txt-humanizer
+name: txtHumanizer
 version: 0.5.1
 kind: skill
 description: "Modulares, 7-sprachiges und varietätensensitives KI-Erkennungs- und Humanisierungs-Framework inkl. CLI für Terminal & CI/CD."
@@ -17,9 +17,6 @@ repository: https://github.com/LangeVC/txtHumanizer
 canonical_source_url: https://github.com/LangeVC/txtHumanizer
 entrypoint: SKILL.md
 bin: bin/txt-humanizer
-replaces:
-  - LangeVC/txtHumanizer
-  - txtHumanizer
 tags:
   - txtHumanizer
   - txt-humanizer
