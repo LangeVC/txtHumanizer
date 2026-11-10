@@ -1,7 +1,7 @@
 # txtHumanizer
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.5.0-blue)](https://github.com/LangeVC/txtHumanizer/releases/tag/v0.5.0)
+[![Version](https://img.shields.io/badge/version-0.5.1-blue)](https://github.com/LangeVC/txtHumanizer/releases/tag/v0.5.1)
 [![Status](https://img.shields.io/badge/status-production%20ready-green)](https://github.com/LangeVC/txtHumanizer)
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
@@ -77,7 +77,7 @@ cat article.md | txt-humanizer check - --format json
 
 - **German (`de`):** `de-DE`, `de-AT` (Austriacisms protected), `de-CH` (Helvetisms protected), Dialects (Bavarian, Alemannic, Cologne, Low German as positive human signals).
 - **English (`en`):** `en-US`, `en-GB`, Style Bleed cross-variant detection.
-- **Coming in v0.5.0:** French (`fr-FR`, `fr-CA`), Spanish (`es-ES`, `es-MX`, `es-AR`), Italian (`it-IT`), Portuguese (`pt-BR`, `pt-PT`), Vietnamese (`vi-North`, `vi-Central`, `vi-South`).
+- **Supported in v0.5.1:** French (`fr-FR`, `fr-CA`), Spanish (`es-ES`, `es-MX`, `es-AR`), Italian (`it-IT`), Portuguese (`pt-BR`, `pt-PT`), Vietnamese (`vi-North`, `vi-Central`, `vi-South`).
 
 ---
 

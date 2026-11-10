@@ -4,6 +4,10 @@ on:
   push:
     tags: ['v*']
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   validate:
     # GitHub-only: never runs on the Forgejo mirror side.
@@ -21,6 +25,8 @@ jobs:
     needs: validate
     if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Create tarball
@@ -52,6 +58,11 @@ jobs:
     needs: build
     if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: Capacium/capacium-action-publish@v1
+        with:
+          use_oidc: 'true'

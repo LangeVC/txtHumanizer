@@ -122,7 +122,7 @@ def evaluate_text(text: str, lang: str = None) -> dict:
 
 def run_check(args, is_json: bool = False) -> int:
     input_path = args.input
-    if input_path == "-" or not sys.stdin.isatty() and not os.path.exists(input_path):
+    if input_path == "-":
         text = sys.stdin.read()
         target_name = "stdin"
     elif os.path.exists(input_path):

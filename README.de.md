@@ -1,7 +1,7 @@
 # txtHumanizer
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.5.0-blue)](https://github.com/LangeVC/txtHumanizer/releases/tag/v0.5.0)
+[![Version](https://img.shields.io/badge/version-0.5.1-blue)](https://github.com/LangeVC/txtHumanizer/releases/tag/v0.5.1)
 [![Status](https://img.shields.io/badge/status-production%20ready-green)](https://github.com/LangeVC/txtHumanizer)
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MTYuNzQiIGhlaWdodD0iNjE2Ljc0IiB2aWV3Qm94PSIwIDAgNjE2Ljc0IDYxNi43NCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmN2ZhZmN9PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTAgMGg2MTYuNzR2NjE2Ljc0SDB6Ii8+PHBhdGggaWQ9IkViZW5lXzIiIGQ9Ik0wIDBoNjE2Ljc0djYxNi43NEgweiIgZGF0YS1uYW1lPSJFYmVuZSAyIiBzdHlsZT0iZmlsbDojMGIxMDIwIi8+PGcgaWQ9IkViZW5lXzEiIGRhdGEtbmFtZT0iRWJlbmUgMSI+PHBhdGggZD0ibTMwOC44MyA1OTAuNDctMzYuMDItMzYuMjQtMjExLjMyLS4wNC0uMDItMjExLjczLTMzLjExLTMzLjk3IDMzLjEtMzIuODMuMDYtMjE1Ljc0IDIxMy43NC0uMDQgMzMuNDQtMzIuOTcgMzIuNzIgMzIuOTUgMjE0LjAxLjA2LjA5IDIxNS42MiAzMi44NSAzMi43Ni0zMi45OCAzMy4xMS4wNyAyMTIuNzQtMjEwLjQuMTItMzYuMjMgMzYuMjJabS4yMy0zNi4wOSA3NS41OS03Ni44NCAxMzkuODMtMTQxLjMxIDI3LjcxLTI4LjE2LTkwLjY1LTkwLjcyTDMwOC4zMiA2NC4yMSAxODYuOCAxODQuNzVsLTk0LjkzIDk1LjQ2LTI4LjEyIDI4LjQ0IDEwNC43NSAxMDUuNSA3NC4wOCA3My42NnptLTkxLjgtNDM1Ljk0IDMyLjE0LTMyLjAyLTE2Mi41MS0uMDMuMDQgMTYyLjQ4em0zMTIuNjMtMzIuMDgtMTYyLjY1LjA2TDUyOS44NSAyNDguOXptLTMxNy4zIDQwOC4xMi04MC41NS04MS44Ny00NS4wMi00NS43Mi0uMTEgMTYyLjA2IDE1OS40Ny0uMDV6bTE1NS43NiAzNC40NmgxNjEuNTNsLS4wNS0xNjIuMDQtNTUuMSA1NC45OXoiIGNsYXNzPSJjbHMtMSIvPjxwYXRoIGQ9Im0zMDguODIgNDgwLjA3LTc5Ljc3LTQ3LjczLTY3LjEyLTQwLjA3LS4wMi0xNzAuNzMgMTQ2LjcyLTg0LjI1IDY0LjgzIDM2Ljg1IDgyLjkyIDQ3LjE1LjAyIDE3MS40OC0xNDcuNTkgODcuM1ptMTcuNzctMjQ4LjUzYzE2LjA4IDQuMzYgMjkuNzMgMTMuMzggNDAuNDcgMjYuMTZsNDkuNTktMjguNDktMTA3Ljc4LTYyLjgxLTEwNy4xNyA2Mi40MyA0OS43NSAyOC41NWMxOC4yNi0yMi42NiA0Ni45OS0zMi44NCA3NS4xNS0yNS44NFptLTMwLjc3IDE1NC45MmMtNDcuNTktMTAuMjEtNzQuOTYtNjAuODMtNTcuMTgtMTA2LjM5bC01MC45LTI5LjYxLS4wOCAxMjguNCAxMDguMDYgNjIuMzIuMS01NC43Wm0yNi4xMy4xNC4yOCA1NC42NCAxMDcuOS02Mi4yOS0uMDUtMTI4LjI0LTQ5Ljc0IDI5LjI3YTc5LjI1IDc5LjI1IDAgMCAxLTMxLjM5IDk1LjczYy04LjMyIDUuNzEtMTcuMTggOC44Ni0yNi45OSAxMC44OFoiIGNsYXNzPSJjbHMtMSIvPjwvZz48L3N2Zz4=&labelColor=0B1020&logoColor=F7FAFC)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
@@ -78,8 +78,8 @@ txt-humanizer check input.txt -j
 # Install Capacium
 brew install capacium/tap/capacium
 
-# Install txtHumanizer
-cap install LangeVC/txtHumanizer
+# Install txtHumanizer (unterstützt LangeVC/txt-humanizer und LangeVC/txtHumanizer)
+cap install LangeVC/txt-humanizer
 ```
 
 ### Git-Pre-Commit Integration
@@ -90,7 +90,7 @@ txtHumanizer enthält ein natives `.pre-commit-hooks.yaml`-Plugin:
 # In deiner .pre-commit-config.yaml:
 repos:
   - repo: https://github.com/LangeVC/txtHumanizer
-    rev: v0.5.0
+    rev: v0.5.1
     hooks:
       - id: txt-humanizer
         args: ["--fail-on", "suspect"]
@@ -98,7 +98,7 @@ repos:
 
 ---
 
-## 🌍 Unterstützte Sprachen & Varietäten (v0.5.0)
+## 🌍 Unterstützte Sprachen & Varietäten (v0.5.1)
 
 - **Deutsch (`de`):** `de-DE`, `de-AT` (Austriazismen geschützt), `de-CH` (Helvetismen geschützt, kein *ß*), Dialekte (Bairisch, Alemannisch, Kölsch, Platt).
 - **Englisch (`en`):** `en-US`, `en-GB`, Style Bleed Cross-Variant-Erkennung.

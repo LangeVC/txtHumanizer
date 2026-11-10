@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.1] - 2026-11-10
+
+### Fixed
+- **Release Permissions in CI**: Resolved HTTP 403 Forbidden on GitHub Actions release step by adding explicit top-level `permissions: contents: write` and `id-token: write` to `.github/workflows/release.yml`.
+- **Capacium Trusted Publishing (OIDC)**: Configured `Capacium/capacium-action-publish@v1` with `use_oidc: "true"` and `id-token: write` permissions, eliminating reliance on static registry secrets.
+- **Capacium Manifest Registry Parity**: Updated `capability.yaml` to declare `owner: LangeVC`, canonical `name: txt-humanizer`, and alias supersedence `replaces: [LangeVC/txtHumanizer, txtHumanizer]`, enabling smooth installation via `cap install LangeVC/txt-humanizer` and `cap install LangeVC/txtHumanizer`.
+- **Packaging Compatibility**: Ensured `cap package` outputs clean `.tar.gz` distribution packages without nested subdirectory collisions.
+
+---
+
 ## [0.5.0] - 2026-10-21
 
 ### Added

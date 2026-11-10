@@ -9,7 +9,7 @@ from txthumanizer.formatter import box, bold, cyan, green, yellow, dim
 
 
 def get_input_text(input_arg: str) -> str:
-    if input_arg == "-" or not sys.stdin.isatty() and not os.path.exists(input_arg):
+    if input_arg == "-":
         return sys.stdin.read()
     if os.path.exists(input_arg):
         with open(input_arg, "r", encoding="utf-8") as f:

@@ -1,13 +1,14 @@
 ---
 name: txtHumanizer
-version: 0.5.0
+version: 0.5.1
 description: |
   Modulares, mehrsprachiges und dialektfähiges Drei-Stufen-Framework für
   Text-Humanisierung und KI-Muster-Erkennung inklusive eigenständiger CLI.
   Basiert auf den aktuellen Richtlinien von Wikipedia DE (Anzeichen für KI-generierte Inhalte)
   und Wikipedia EN (Signs of AI writing / WP:AISIGNS).
 
-  Highlights v0.5.0:
+  Highlights v0.5.1:
+  - Capacium Registry & OIDC Publishing: Saubere Trusted Publishing Pipeline und vollständige Registry-Verfügbarkeit.
   - 7 Sprachen unterstützt: Deutsch (`de`), Englisch (`en`), Französisch (`fr`),
     Spanisch (`es`), Italienisch (`it`), Portugiesisch (`pt`), Vietnamesisch (`vi`).
   - Umfassende Varietäten- & Dialektschilde: Schutz für fr-CA, es-MX, es-AR (Voseo/Lunfardo),
@@ -27,7 +28,7 @@ allowed-tools:
 
 # txtHumanizer: Modulares & Mehrsprachiges Humanisierungs-Framework
 
-== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.5.0) ==
+== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.5.1) ==
 
 === ROLLE ===
 Du bist ein professionelles linguistisches System zur Erkennung und Entfernung

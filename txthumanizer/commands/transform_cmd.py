@@ -11,24 +11,49 @@ from txthumanizer.formatter import bold, red, green, cyan, dim
 
 
 def parse_transforms_simple(path: str) -> dict:
+    replacements = {}
+    data = None
     try:
         import yaml
         with open(path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
-    except ImportError:
+            data = yaml.safe_load(f)
+    except Exception:
         pass
 
-    replacements = {}
-    with open(path, "r", encoding="utf-8") as f:
-        text = f.read()
+    if isinstance(data, dict):
+        if "replacements" in data and isinstance(data["replacements"], dict):
+            replacements.update(data["replacements"])
+        for item in data.get("transforms", []):
+            if isinstance(item, dict) and "replacements" in item and isinstance(item["replacements"], dict):
+                replacements.update(item["replacements"])
+        return {"replacements": replacements}
 
-    # Extract replacements: block
-    if "replacements:" in text:
-        block = text[text.find("replacements:"):].split("\n\n")[0]
-        for line in block.splitlines():
-            m = re.match(r'^\s*"?([^":]+)"?:\s*"?([^"\n]+)"?', line)
-            if m:
-                replacements[m.group(1).strip()] = m.group(2).strip()
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+
+        in_rep = False
+        indent = 0
+        for line in text.splitlines():
+            if "replacements:" in line:
+                in_rep = True
+                indent = len(line) - len(line.lstrip())
+                continue
+            if in_rep:
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#"):
+                    continue
+                curr_indent = len(line) - len(line.lstrip())
+                if curr_indent <= indent:
+                    in_rep = False
+                    continue
+                m = re.match(r'^\s*"?([^":]+)"?:\s*"?([^"\n]+)"?', line)
+                if m:
+                    target = m.group(1).strip().strip('"\'')
+                    rep = m.group(2).strip().strip('"\'')
+                    replacements[target] = rep
+    except Exception:
+        pass
 
     return {"replacements": replacements}
 
@@ -70,7 +95,7 @@ def apply_transforms(text: str, lang: str = None) -> tuple:
 
 def run_transform(args, is_json: bool = False) -> int:
     input_path = args.input
-    is_stdin = input_path == "-" or not sys.stdin.isatty() and not os.path.exists(input_path)
+    is_stdin = input_path == "-"
 
     if is_stdin:
         original = sys.stdin.read()
