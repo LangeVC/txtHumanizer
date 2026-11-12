@@ -6,6 +6,12 @@
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
 
+> [!NOTE]
+> **Public mirror.** The canonical repository is hosted on our self-hosted git.
+> This GitHub copy is a read-only mirror kept in sync for visibility and
+> installation. Bug reports are welcome via Issues; pull requests are applied
+> upstream and synced back here.
+
 [ ![English](https://img.shields.io/badge/🇬🇧-English-238636?style=flat-square) ](README.md)
 [ ![Deutsch](https://img.shields.io/badge/🇩🇪-Deutsch-0969da?style=flat-square) ](README.de.md)
 [ ![Français](https://img.shields.io/badge/🇫🇷-Français-0969da?style=flat-square) ](README.fr.md)
@@ -84,3 +90,7 @@ cat article.md | txt-humanizer check - --format json
 ## 📜 License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
+
+## Development
+
+The canonical repository is maintained on self-hosted infrastructure. The GitHub repository serves as the public release and distribution mirror. Pull requests and issues submitted via GitHub are welcomed and synchronized automatically.

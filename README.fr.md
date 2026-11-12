@@ -6,6 +6,11 @@
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
 
+> [!NOTE]
+> **Miroir public.** Le dépôt canonique est hébergé sur notre instance Git auto-hébergée.
+> Cette copie GitHub est un miroir en lecture seule maintenu synchronisé pour la visibilité et l'installation.
+> Les signalements de bogues sont les bienvenus via les Issues ; les pull requests sont appliquées en amont puis resynchronisées ici.
+
 [ ![English](https://img.shields.io/badge/🇬🇧-English-0969da?style=flat-square) ](README.md)
 [ ![Deutsch](https://img.shields.io/badge/🇩🇪-Deutsch-0969da?style=flat-square) ](README.de.md)
 [ ![Français](https://img.shields.io/badge/🇫🇷-Français-238636?style=flat-square) ](README.fr.md)
@@ -36,3 +41,7 @@ txt-humanizer check document.md
 ## 📜 Licence
 
 Sous licence [Apache License, Version 2.0](LICENSE).
+
+## Développement
+
+Le dépôt canonique est maintenu sur une infrastructure auto-hébergée. Le dépôt GitHub sert de miroir public de publication et de distribution. Les pull requests et issues soumises via GitHub sont les bienvenues et synchronisées automatiquement.

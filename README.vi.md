@@ -6,6 +6,11 @@
 [![Capacium](https://img.shields.io/badge/Capacium-Install%20via%20cap-0B1020?style=flat-square)](https://github.com/Capacium/capacium)
 [![CI](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml/badge.svg)](https://github.com/LangeVC/txtHumanizer/actions/workflows/ci.yml)
 
+> [!NOTE]
+> **Bản sao công khai (Public mirror).** Kho mã nguồn chính thức được lưu trữ trên hạ tầng Git tự vận hành.
+> Bản sao trên GitHub này là bản mirror chỉ đọc được đồng bộ để phục vụ tra cứu và cài đặt.
+> Báo lỗi luôn được hoan nghênh qua Issues; các pull request sẽ được áp dụng ở upstream và đồng bộ lại tại đây.
+
 [ ![English](https://img.shields.io/badge/🇬🇧-English-0969da?style=flat-square) ](README.md)
 [ ![Deutsch](https://img.shields.io/badge/🇩🇪-Deutsch-0969da?style=flat-square) ](README.de.md)
 [ ![Français](https://img.shields.io/badge/🇫🇷-Français-0969da?style=flat-square) ](README.fr.md)
@@ -36,3 +41,7 @@ txt-humanizer check van-ban.md
 ## 📜 Giấy phép
 
 Được phát hành theo [Giấy phép Apache, Phiên bản 2.0](LICENSE).
+
+## Phát triển
+
+Kho mã nguồn chính thức được duy trì trên hạ tầng tự vận hành. Kho GitHub đóng vai trò là bản mirror phát hành và phân phối công khai. Mọi pull request và issue gửi qua GitHub đều được hoan nghênh và đồng bộ tự động.

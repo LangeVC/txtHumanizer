@@ -5,8 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-> **Repository Provenance**: Forgejo (`git.langevc.com/langevc/txt-humanizer`) is canonical.
-> GitHub (`github.com/LangeVC/txtHumanizer`) is a read-only mirror.
+> [!NOTE]
+> **Public mirror.** The canonical repository is hosted on self-hosted infrastructure.
+> GitHub (`github.com/LangeVC/txtHumanizer`) serves as the read-only public release and distribution mirror.
 
 ---
 
