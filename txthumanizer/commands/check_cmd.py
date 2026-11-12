@@ -5,22 +5,68 @@ import sys
 import os
 import re
 import json
-from catalog.engine.detector import detect_language
+from functools import lru_cache
+from catalog.engine.detector import detect_language, find_phrase_matches, normalize_text
+from txthumanizer.config import load_config
 from txthumanizer.formatter import box, bold, red, yellow, green, cyan, dim, score_badge
 
 
-def parse_yaml_simple(path: str) -> dict:
-    """Lightweight pure-python parser for txt-humanizer criteria files."""
+@lru_cache(maxsize=16)
+def _get_supported_languages_cached(lang_dir: str, required_file: str, dir_mtime_ns: int) -> tuple:
+    langs = sorted(
+        d for d in os.listdir(lang_dir)
+        if os.path.isdir(os.path.join(lang_dir, d))
+        and os.path.isfile(os.path.join(lang_dir, d, required_file))
+    )
+    return tuple(langs) if langs else ("de", "en")
+
+
+def get_supported_languages(required_file: str = "criteria.yaml") -> list:
+    """Discover supported language catalog codes under catalog/languages/."""
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    lang_dir = os.path.join(base_dir, "catalog", "languages")
+    if not os.path.isdir(lang_dir):
+        return ["de", "en"]
+    return list(_get_supported_languages_cached(lang_dir, required_file, os.stat(lang_dir).st_mtime_ns))
+
+
+def resolve_effective_language(
+    explicit_lang: str,
+    config: dict,
+    detected_lang: str,
+    supported_langs: list,
+) -> str:
+    """Resolve effective language: explicit arg > config default_lang > detected > 'de'."""
+    if isinstance(explicit_lang, str):
+        norm_explicit = explicit_lang.strip().lower()
+        if norm_explicit in supported_langs:
+            return norm_explicit
+
+    cfg_lang = config.get("default_lang") if isinstance(config, dict) else None
+    if isinstance(cfg_lang, str):
+        norm_cfg = cfg_lang.strip().lower()
+        if norm_cfg in supported_langs:
+            return norm_cfg
+
+    if isinstance(detected_lang, str) and detected_lang in supported_langs:
+        return detected_lang
+
+    return "de" if "de" in supported_langs else supported_langs[0]
+
+
+@lru_cache(maxsize=32)
+def _parse_yaml_cached(abs_path: str, mtime_ns: int) -> dict:
+    """Parse and cache criteria YAML keyed by resolved path and mtime."""
     try:
         import yaml
-        with open(path, "r", encoding="utf-8") as f:
+        with open(abs_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     except ImportError:
         pass
 
     # Fallback regex-based extraction of criteria
     criteria_list = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(abs_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     blocks = re.split(r"\n\s*-\s+id:\s*", content)
@@ -45,11 +91,24 @@ def parse_yaml_simple(path: str) -> dict:
     return {"criteria": criteria_list}
 
 
-def evaluate_text(text: str, lang: str = None) -> dict:
-    det = detect_language(text)
-    detected_lang = lang if lang in ("de", "en") else det["language"]
-    if detected_lang not in ("de", "en"):
-        detected_lang = "de"
+def parse_yaml_simple(path: str) -> dict:
+    """Lightweight pure-python parser for txt-humanizer criteria files."""
+    abs_path = os.path.abspath(path)
+    return _parse_yaml_cached(abs_path, os.stat(abs_path).st_mtime_ns)
+
+
+def evaluate_text(text: str, lang: str = None, config: dict = None) -> dict:
+    cfg = load_config() if config is None else config
+    supported_langs = get_supported_languages("criteria.yaml")
+
+    normalized_text = normalize_text(text)
+    det = detect_language(normalized_text)
+    detected_lang = resolve_effective_language(
+        lang,
+        cfg,
+        det.get("language"),
+        supported_langs,
+    )
 
     # Base directory resolution
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -58,24 +117,32 @@ def evaluate_text(text: str, lang: str = None) -> dict:
     data = parse_yaml_simple(crit_file)
     criteria = data.get("criteria", [])
 
-    lines = text.splitlines()
+    disabled_rules = set(cfg.get("disabled_rules") or [])
+    weight_overrides = cfg.get("weight_overrides") or {}
+
+    lines = normalized_text.splitlines()
     matches = []
     score = 0.0
 
     for crit in criteria:
-        triggers = crit.get("triggers", [])
         crit_id = crit.get("id")
+        if crit_id in disabled_rules:
+            continue
+
+        triggers = crit.get("triggers", [])
         crit_name = crit.get("name")
         crit_tier = crit.get("tier", 2)
-        crit_weight = float(crit.get("weight", 0.5))
+        if crit_id in weight_overrides:
+            crit_weight = float(weight_overrides[crit_id])
+        else:
+            crit_weight = float(crit.get("weight", 0.5))
 
         matched_quotes = []
         for line_no, line in enumerate(lines, 1):
             for trig in triggers:
-                if trig.lower() in line.lower():
-                    # Extract quote snippet
-                    start = max(0, line.lower().find(trig.lower()) - 20)
-                    end = min(len(line), start + len(trig) + 40)
+                for m in find_phrase_matches(line, trig):
+                    start = max(0, m.start() - 20)
+                    end = min(len(line), m.end() + 40)
                     snippet = line[start:end].strip()
                     matched_quotes.append({"line": line_no, "trigger": trig, "snippet": snippet})
 
@@ -100,9 +167,13 @@ def evaluate_text(text: str, lang: str = None) -> dict:
 
     final_score = max(0.0, round(score - human_offset, 2))
 
-    if final_score < 1.0:
+    thresholds = cfg.get("thresholds") or {"review": 1.0, "suspect": 2.5}
+    review_threshold = float(thresholds.get("review", 1.0))
+    suspect_threshold = float(thresholds.get("suspect", 2.5))
+
+    if final_score < review_threshold:
         verdict = "clean"
-    elif final_score < 2.5:
+    elif final_score < suspect_threshold:
         verdict = "review"
     else:
         verdict = "suspect"
@@ -113,7 +184,7 @@ def evaluate_text(text: str, lang: str = None) -> dict:
         "raw_penalty": round(score, 2),
         "human_offset": round(human_offset, 2),
         "language": detected_lang,
-        "variety": det["variety"],
+        "variety": det.get("variety", "standard"),
         "human_signals": det.get("human_signals", []),
         "matches_count": len(matches),
         "matches": matches
@@ -125,13 +196,16 @@ def run_check(args, is_json: bool = False) -> int:
     if input_path == "-":
         text = sys.stdin.read()
         target_name = "stdin"
+        config = load_config()
     elif os.path.exists(input_path):
         with open(input_path, "r", encoding="utf-8") as f:
             text = f.read()
         target_name = os.path.basename(input_path)
+        config = load_config(start_path=input_path)
     else:
         text = input_path
         target_name = "inline_text"
+        config = load_config()
 
     if not text.strip():
         if is_json:
@@ -140,7 +214,7 @@ def run_check(args, is_json: bool = False) -> int:
             sys.stderr.write("Error: Empty input text.\n")
         return 2
 
-    res = evaluate_text(text, lang=args.lang)
+    res = evaluate_text(text, lang=getattr(args, "lang", None), config=config)
 
     if is_json or getattr(args, "json", False):
         print(json.dumps(res, ensure_ascii=False, indent=2))
@@ -163,13 +237,17 @@ def run_check(args, is_json: bool = False) -> int:
             print(green("  No conspicuous AI pattern triggers detected."))
         print()
 
-    # Determine exit code based on threshold or fail-on
+    # Determine exit code based on threshold or fail-on (CLI overrides config)
+    threshold = getattr(args, "threshold", None)
+    cli_fail_on = getattr(args, "fail_on", None)
+    fail_on = cli_fail_on if cli_fail_on is not None else (None if threshold is not None else config.get("fail_on"))
+
     exit_code = 0
-    if args.threshold is not None and res["score"] >= args.threshold:
+    if threshold is not None and res["score"] >= threshold:
         exit_code = 1
-    elif args.fail_on == "suspect" and res["verdict"] == "suspect":
+    elif fail_on == "suspect" and res["verdict"] == "suspect":
         exit_code = 1
-    elif args.fail_on == "review" and res["verdict"] in ("review", "suspect"):
+    elif fail_on == "review" and res["verdict"] in ("review", "suspect"):
         exit_code = 1
 
     return exit_code

@@ -10,17 +10,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] - 2026-11-12
+
+### Added
+- **Project Configuration (`.txthumanizerrc.yaml`)**: Zero-dependency upward config discovery & stdlib YAML subset parser (`txthumanizer/config.py`) supporting custom `thresholds` (`review`, `suspect`), `disabled_rules`, `weight_overrides`, `default_lang`, `fail_on`, and `ignore_paths`, integrated into `check`, `scan`, `transform`, and `review`.
+- **Local HTTP Server & Offline Web UI (`txt-humanizer serve`)**: Pure stdlib `ThreadingHTTPServer` bound to `127.0.0.1:8080` serving an offline single-page review UI at `/` plus JSON endpoints (`/api/health`, `/api/detect`, `/api/check`, `/api/transform`).
+- **Vietnamese NFC & Syllable-Aware Boundary Tokenization**: Normalized NFD/NFC inputs and introduced `compile_phrase_pattern` / `find_phrase_matches` in `catalog/engine/detector.py` so multi-word compounds (`máy lạnh`, `xe hơi`, `fin de semaine`) match reliably without partial subword false positives.
+- **Full 7-Language Evaluation in `check`**: Dynamically discovers all language catalogs (`de`, `en`, `fr`, `es`, `it`, `pt`, `vi`) instead of restricting evaluation to `de`/`en`.
+- **CI Test & Version Parity Gate**: Added `pytest tests/` execution to `.github/workflows/ci.yml` alongside `tests/test_version_parity.py` verifying `.version.yaml`, `capability.yaml`, `txthumanizer/__init__.py`, `setup.py`, and `SKILL.md`.
+
+### Performance
+- **Adaptive Single-Process Fast Path (`scan`)**: Batches under 500 files under `--workers auto` bypass `ProcessPoolExecutor` spawn overhead while preserving multi-core execution for large trees, plus mtime-cached criteria loading (>100 files/sec sustained on macOS).
+
+---
+
 ## [0.5.1] - 2026-11-10
 
 ### Fixed
 - **Release Permissions in CI**: Resolved HTTP 403 Forbidden on GitHub Actions release step by adding explicit top-level `permissions: contents: write` and `id-token: write` to `.github/workflows/release.yml`.
 - **Capacium Trusted Publishing (OIDC)**: Configured `Capacium/capacium-action-publish@v1` with `use_oidc: "true"` and `id-token: write` permissions, eliminating reliance on static registry secrets.
-- **Capacium Manifest Registry Parity**: Updated `capability.yaml` to declare `owner: LangeVC`, canonical `name: txt-humanizer`, and alias supersedence `replaces: [LangeVC/txtHumanizer, txtHumanizer]`, enabling smooth installation via `cap install LangeVC/txt-humanizer` and `cap install LangeVC/txtHumanizer`.
+- **Capacium Manifest Registry Parity**: Aligned `capability.yaml` with `owner: LangeVC` and `name: txtHumanizer` matching the canonical GitHub repository `LangeVC/txtHumanizer` for clean `cap install LangeVC/txtHumanizer`.
 - **Packaging Compatibility**: Ensured `cap package` outputs clean `.tar.gz` distribution packages without nested subdirectory collisions.
+- **CLI Input & Transform Parsing**: Fixed non-TTY stdin shadowing on inline text (`detect`/`check`/`transform`) and extracted nested `replacements:` blocks in `parse_transforms_simple`.
 
 ---
 
 ## [0.5.0] - 2026-10-21
+
+> **Release Note (Historical Lineage):** Git tag `v0.5.0` failed to publish a GitHub Release / Capacium artifact due to missing CI permissions (resolved in [`0.5.1`](#051---2026-11-10)). Users should install `v0.5.1` or newer.
 
 ### Added
 - **5 New Language Catalogs**: Full support for French (`fr`), Spanish (`es`), Italian (`it`), Portuguese (`pt`), and Vietnamese (`vi`).
@@ -37,6 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [0.4.0] - 2026-10-21
+
+> **Release Note (Historical Lineage):** Git tag `v0.4.0` failed to publish a GitHub Release / Capacium artifact due to missing CI permissions (resolved in [`0.5.1`](#051---2026-11-10)).
 
 ### Added
 - **Unified CLI Suite (`txt-humanizer`)**:

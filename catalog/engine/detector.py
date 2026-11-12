@@ -6,7 +6,9 @@ Supports: DE, EN, FR, ES, IT, PT, VI.
 """
 import re
 import time
-from typing import Dict, Any, List
+import unicodedata
+from functools import lru_cache
+from typing import Dict, Any, Iterable, List
 
 # Core stopwords for primary language detection
 STOPWORDS_DE = {
@@ -113,12 +115,56 @@ DIALECT_MARKERS_VI = {
 }
 
 
+def normalize_text(text: str) -> str:
+    """Normalize input text to Unicode NFC form."""
+    return unicodedata.normalize("NFC", text)
+
+
+@lru_cache(maxsize=512)
+def compile_phrase_pattern(phrase: str) -> re.Pattern:
+    """Compile a case-insensitive regex with Unicode word boundaries for a word or phrase."""
+    tokens = normalize_text(phrase).strip().split()
+    if not tokens:
+        return re.compile(r"(?!)")
+    body = r"\s+".join(re.escape(token) for token in tokens)
+    return re.compile(rf"(?<!\w){body}(?!\w)", re.IGNORECASE | re.UNICODE)
+
+
+def find_phrase_matches(text: str, phrase: str) -> List[re.Match]:
+    """Return all boundary-aware matches of `phrase` in NFC-normalized `text`."""
+    if not text or not phrase or not phrase.strip():
+        return []
+    return list(compile_phrase_pattern(phrase).finditer(normalize_text(text)))
+
+
+def _matched_markers(text: str, markers: Iterable[str]) -> List[str]:
+    """Return markers from `markers` that match NFC-normalized `text` at word boundaries."""
+    normalized = normalize_text(text)
+    return [marker for marker in markers if compile_phrase_pattern(marker).search(normalized)]
+
+
+def _collect_dialect_signals(
+    text: str,
+    marker_groups: Dict[str, List[str]],
+    signal_type: str = "dialect",
+) -> List[Dict[str, Any]]:
+    """Collect matched dialect or colloquial marker signals for a language."""
+    signals: List[Dict[str, Any]] = []
+    for dial_name, markers in marker_groups.items():
+        found_markers = _matched_markers(text, markers)
+        if found_markers:
+            signals.append({"type": signal_type, "name": dial_name, "evidence": found_markers})
+    return signals
+
+
 def tokenize_words(text: str) -> List[str]:
-    return [w.lower() for w in re.findall(r"\b[\w\-]+\b", text, re.UNICODE)]
+    normalized = normalize_text(text)
+    return [w.lower() for w in re.findall(r"\b[\w\-]+\b", normalized, re.UNICODE)]
 
 
 def detect_language(text: str) -> Dict[str, Any]:
     t0 = time.perf_counter()
+    text = normalize_text(text)
     words = tokenize_words(text)
     total_words = len(words)
     if total_words == 0:
@@ -150,24 +196,18 @@ def detect_language(text: str) -> Dict[str, Any]:
         scores["vi"] += 5
 
     # Check dialect hints
-    for dial_name, markers in DIALECT_MARKERS_DE.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["de"] += 3
-    for dial_name, markers in DIALECT_MARKERS_FR.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["fr"] += 3
-    for dial_name, markers in DIALECT_MARKERS_ES.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["es"] += 3
-    for dial_name, markers in DIALECT_MARKERS_IT.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["it"] += 3
-    for dial_name, markers in DIALECT_MARKERS_PT.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["pt"] += 3
-    for dial_name, markers in DIALECT_MARKERS_VI.items():
-        if any(re.search(r"\b" + re.escape(m) + r"\b", text, re.I) for m in markers):
-            scores["vi"] += 4
+    dialect_score_groups = (
+        ("de", DIALECT_MARKERS_DE, 3),
+        ("fr", DIALECT_MARKERS_FR, 3),
+        ("es", DIALECT_MARKERS_ES, 3),
+        ("it", DIALECT_MARKERS_IT, 3),
+        ("pt", DIALECT_MARKERS_PT, 3),
+        ("vi", DIALECT_MARKERS_VI, 4),
+    )
+    for lang_code, marker_groups, weight in dialect_score_groups:
+        for markers in marker_groups.values():
+            if _matched_markers(text, markers):
+                scores[lang_code] += weight
 
     primary_lang = max(scores, key=scores.get)
     max_score = scores[primary_lang]
@@ -182,11 +222,7 @@ def detect_language(text: str) -> Dict[str, Any]:
         has_eszett = "ß" in text
         helv_found = [w for w in words if w in HELVETISMS]
         aust_found = [w for w in words if w in AUSTRICISMS]
-
-        for dial_name, markers in DIALECT_MARKERS_DE.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_DE))
 
         if not has_eszett and (helv_found or "«" in text or "»" in text):
             variety = "de-CH"
@@ -220,11 +256,8 @@ def detect_language(text: str) -> Dict[str, Any]:
 
     # Variety detection for French
     elif primary_lang == "fr":
-        qc_found = [w for w in words if w in QUEBECOIS]
-        for dial_name, markers in DIALECT_MARKERS_FR.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "colloquial_marker", "name": dial_name, "evidence": found_markers})
+        qc_found = _matched_markers(text, sorted(QUEBECOIS))
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_FR, signal_type="colloquial_marker"))
 
         if qc_found:
             variety = "fr-CA"
@@ -237,10 +270,7 @@ def detect_language(text: str) -> Dict[str, Any]:
     elif primary_lang == "es":
         ar_found = [w for w in words if w in ARGENTINE]
         mx_found = [w for w in words if w in MEXICAN]
-        for dial_name, markers in DIALECT_MARKERS_ES.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_ES))
 
         if ar_found:
             variety = "es-AR"
@@ -256,19 +286,13 @@ def detect_language(text: str) -> Dict[str, Any]:
     elif primary_lang == "it":
         variety = "it-IT"
         variety_details = {"name": "Italiano standard"}
-        for dial_name, markers in DIALECT_MARKERS_IT.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_IT))
 
     # Variety detection for Portuguese
     elif primary_lang == "pt":
         br_found = [w for w in words if w in PT_BR_INDICATORS]
         pt_found = [w for w in words if w in PT_PT_INDICATORS]
-        for dial_name, markers in DIALECT_MARKERS_PT.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_PT))
 
         if br_found:
             variety = "pt-BR"
@@ -282,12 +306,9 @@ def detect_language(text: str) -> Dict[str, Any]:
 
     # Variety detection for Vietnamese
     elif primary_lang == "vi":
-        central_found = [w for w in words if w in VI_CENTRAL_INDICATORS]
-        south_found = [w for w in words if w in VI_SOUTH_INDICATORS]
-        for dial_name, markers in DIALECT_MARKERS_VI.items():
-            found_markers = [m for m in markers if re.search(r"\b" + re.escape(m) + r"\b", text, re.I)]
-            if found_markers:
-                human_signals.append({"type": "dialect", "name": dial_name, "evidence": found_markers})
+        central_found = _matched_markers(text, sorted(VI_CENTRAL_INDICATORS))
+        south_found = _matched_markers(text, sorted(VI_SOUTH_INDICATORS))
+        human_signals.extend(_collect_dialect_signals(text, DIALECT_MARKERS_VI))
 
         if central_found:
             variety = "vi-Central"

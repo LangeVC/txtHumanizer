@@ -1,21 +1,20 @@
 ---
 name: txtHumanizer
-version: 0.5.1
+version: 0.6.0
 description: |
   Modulares, mehrsprachiges und dialektfähiges Drei-Stufen-Framework für
-  Text-Humanisierung und KI-Muster-Erkennung inklusive eigenständiger CLI.
+  Text-Humanisierung und KI-Muster-Erkennung inklusive eigenständiger CLI & Web UI.
   Basiert auf den aktuellen Richtlinien von Wikipedia DE (Anzeichen für KI-generierte Inhalte)
   und Wikipedia EN (Signs of AI writing / WP:AISIGNS).
 
-  Highlights v0.5.1:
-  - Capacium Registry & OIDC Publishing: Saubere Trusted Publishing Pipeline und vollständige Registry-Verfügbarkeit.
-  - 7 Sprachen unterstützt: Deutsch (`de`), Englisch (`en`), Französisch (`fr`),
+  Highlights v0.6.0:
+  - Projektkonfiguration via `.txthumanizerrc.yaml`: Eigene Schwellwerte, Regel-Deaktivierung, Gewichts-Overrides & Ignore-Pfade.
+  - Lokaler Browser-Server (`txt-humanizer serve`): Offline-fähige Single-Page Web-UI + JSON-API (`/api/detect`, `/api/check`, `/api/transform`).
+  - Vietnamesische NFC- & Silbengrenzen-Tokenisierung: Verhindert Teilwort-Fehlmatches und unterstützt zusammengesetzte Varietäten-Anker.
+  - Adaptiver Scan-Fast-Path (<500 Dateien): >1.000 Dateien/s ohne Process-Spawn-Overhead + Katalog-/Criteria-Caching.
+  - Vollständiger 7-Sprachen-Support in `check`: Deutsch (`de`), Englisch (`en`), Französisch (`fr`),
     Spanisch (`es`), Italienisch (`it`), Portugiesisch (`pt`), Vietnamesisch (`vi`).
-  - Umfassende Varietäten- & Dialektschilde: Schutz für fr-CA, es-MX, es-AR (Voseo/Lunfardo),
-    pt-BR vs pt-PT, sowie vietnamesische Dialektregionen (Bắc Bộ, Trung Bộ / Nghệ Tĩnh, Nam Bộ).
-  - Interaktiver Review-Modus: `txt-humanizer review <datei>` zur schrittweisen [y/n/a/e/q] Übernahme.
-  - Multi-Core High-Volume Scanner: Parallele Batch-Scans (`--workers auto`) für >10.000 Dateien in Sekunden.
-  - Native Pre-Commit Integration: `.pre-commit-hooks.yaml` im Repository-Root.
+  - CI Test- & Versionsparitäts-Gate: Automatisierte `pytest`-Suite + Single-Source-Versionsprüfung.
 allowed-tools:
   - Read
   - Write
@@ -28,7 +27,7 @@ allowed-tools:
 
 # txtHumanizer: Modulares & Mehrsprachiges Humanisierungs-Framework
 
-== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.5.1) ==
+== SYSTEM: txtHumanizer – Multilingual & Variety-Aware Text Humanizer (v0.6.0) ==
 
 === ROLLE ===
 Du bist ein professionelles linguistisches System zur Erkennung und Entfernung

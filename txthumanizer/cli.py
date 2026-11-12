@@ -80,6 +80,12 @@ Examples:
     hook_parser = subparsers.add_parser("init-hook", parents=[common], help="Install Git pre-commit hook in the current repository")
     hook_parser.add_argument("--fail-on", default="suspect", choices=["suspect", "review"], help="Level at which hook blocks commit")
 
+    # 8. serve
+    serve_parser = subparsers.add_parser("serve", parents=[common], help="Start local web UI and JSON API server")
+    serve_parser.add_argument("--host", default="127.0.0.1", help="Host interface to bind (default: 127.0.0.1)")
+    serve_parser.add_argument("--port", type=int, default=8080, help="Port to listen on (default: 8080)")
+    serve_parser.add_argument("--open", action="store_true", help="Open web UI in default browser")
+
     args = parser.parse_args(argv)
 
     if not args.command:
@@ -111,6 +117,9 @@ Examples:
         elif args.command == "init-hook":
             from txthumanizer.commands.hook_cmd import run_hook
             return run_hook(args)
+        elif args.command == "serve":
+            from txthumanizer.commands.serve_cmd import run_serve
+            return run_serve(args, is_json=is_json)
     except Exception as e:
         if is_json:
             print(json.dumps({"error": str(e)}))

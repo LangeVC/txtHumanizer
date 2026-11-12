@@ -1,6 +1,6 @@
 owner: LangeVC
 name: txtHumanizer
-version: 0.5.1
+version: 0.6.0
 kind: skill
 description: "Modulares, 7-sprachiges und varietätensensitives KI-Erkennungs- und Humanisierungs-Framework inkl. CLI für Terminal & CI/CD."
 long_description: >

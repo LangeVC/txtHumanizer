@@ -3,9 +3,10 @@ Handler for 'review' subcommand (Interactive human-in-the-loop review).
 """
 import sys
 import os
-import re
-from catalog.engine.detector import detect_language
-from txthumanizer.commands.transform_cmd import parse_transforms_simple
+from catalog.engine.detector import compile_phrase_pattern, detect_language, normalize_text
+from txthumanizer.commands.check_cmd import get_supported_languages, resolve_effective_language
+from txthumanizer.commands.transform_cmd import filter_replacements, parse_transforms_simple
+from txthumanizer.config import load_config
 from txthumanizer.formatter import bold, red, green, yellow, cyan, dim
 
 
@@ -16,37 +17,45 @@ def run_review(args, is_json: bool = False) -> int:
         return 2
 
     with open(path, "r", encoding="utf-8") as f:
-        content = f.read()
+        content = normalize_text(f.read())
 
+    config = load_config(start_path=path)
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    supported_langs = [
-        d for d in os.listdir(os.path.join(base_dir, "catalog", "languages"))
-        if os.path.isdir(os.path.join(base_dir, "catalog", "languages", d))
-    ] if os.path.exists(os.path.join(base_dir, "catalog", "languages")) else ["de", "en"]
+    supported_langs = get_supported_languages("transforms.yaml")
 
     det = detect_language(content)
-    lang = getattr(args, "lang", None)
-    if not lang or lang not in supported_langs:
-        lang = det["language"] if det["language"] in supported_langs else "de"
+    lang = resolve_effective_language(
+        getattr(args, "lang", None),
+        config,
+        det.get("language"),
+        supported_langs,
+    )
 
     trans_file = os.path.join(base_dir, "catalog", "languages", lang, "transforms.yaml")
     data = parse_transforms_simple(trans_file)
-    replacements = data.get("replacements", {})
+    replacements = filter_replacements(data, config.get("disabled_rules"))
 
-    # Collect all match candidates
-    candidates = []
+    # Collect all match candidates using NFC/boundary-aware patterns
+    raw_candidates = []
     for target, rep in replacements.items():
-        pattern = r"\b" + re.escape(target) + r"\b"
-        for m in re.finditer(pattern, content, re.I):
-            candidates.append({
+        pattern = compile_phrase_pattern(target)
+        rep_clean = rep.split(" / ")[0]
+        for m in pattern.finditer(content):
+            raw_candidates.append({
                 "target": m.group(0),
-                "replacement": rep.split(" / ")[0],
+                "replacement": rep_clean,
                 "start": m.start(),
                 "end": m.end()
             })
 
-    # Sort candidates by appearance in file
-    candidates.sort(key=lambda c: c["start"])
+    # Sort candidates by appearance in file and keep non-overlapping matches
+    raw_candidates.sort(key=lambda c: (c["start"], -(c["end"] - c["start"])))
+    candidates = []
+    prev_end = 0
+    for c in raw_candidates:
+        if c["start"] >= prev_end:
+            candidates.append(c)
+            prev_end = c["end"]
 
     if not candidates:
         print(f"\n{green('✔ No AI-typical phrases found in')} {bold(path)}")
