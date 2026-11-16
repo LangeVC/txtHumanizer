@@ -1,0 +1,28 @@
+# Layer-3 repository override (DST-002): the release destinations of txt-humanizer.
+#
+# The release handler reads this file at the tag through
+# ops_engine.config_loader.load_ops_yaml and publishes one release object per
+# `role: release` destination below. Without this file the handler refuses with
+# MissingOpsYamlError rather than publishing to fewer destinations, which is why
+# the file exists: a tag that reaches one forge and not the other leaves the
+# public "latest release" behind on the forge a reader looks at.
+#
+# The forge is a value, not a key name. Order is publication order: Forgejo
+# (git.langevc.com) is canonical, GitHub (LangeVC/txtHumanizer) is its mirror.
+# The GitHub repository keeps the original case-sensitive name.
+destinations:
+  - forge: forgejo
+    repo: langevc/txt-humanizer
+    role: release
+    visibility: public
+  - forge: github
+    repo: LangeVC/txtHumanizer
+    role: release
+    visibility: public
+
+# No tracker_prefixes is declared, deliberately. The release-notes audience gate
+# refuses a ticket-shaped token only when its prefix appears in a declared list;
+# the list for this repository was measured, not guessed: none of the 18 commits
+# on any ref, and no CHANGELOG.md section, carries a tracker-shaped token. An
+# absent list therefore runs no check, which is the correct default rather than
+# a hole (D45).
