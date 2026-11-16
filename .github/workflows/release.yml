@@ -5,7 +5,7 @@ on:
     tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
@@ -25,8 +25,6 @@ jobs:
     needs: validate
     if: github.server_url == 'https://github.com'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Create tarball
@@ -44,15 +42,10 @@ jobs:
         with:
           name: txtHumanizer-release
           path: ${{ env.TARBALL_PATH }}
-      - name: Upload to GitHub Release
-        # Create the GitHub release from the mirrored tag and attach the tarball.
-        # Tags originate on Forgejo (canonical); this never creates tags or commits.
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ env.TARBALL_PATH }}
-          name: txtHumanizer ${{ github.ref_name }}
-          generate_release_notes: true
+
+  # No step in this workflow creates or edits a GitHub release object: the engine
+  # owns the release, its body and its destinations (RFL-016). This workflow builds
+  # and uploads an Actions artifact only; it never writes a tag, commit or release.
 
   publish:
     needs: build
