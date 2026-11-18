@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.1] - 2026-11-18
+
+No functional change.
+
+- The release object, its title and its body are written by the ops-engine on the canonical Forgejo and on the GitHub mirror; no workflow of the repository creates or edits it any more.
+- The public-mirror note and the footer are aligned across all READMEs.
+
 ## [0.6.0] - 2026-11-12
 
 ### Added
